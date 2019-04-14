@@ -1,0 +1,116 @@
+body {
+    background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0;
+    overflow: hidden;
+}
+
+.row {
+    width: 100vw;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header {
+    height: 35vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    text-shadow: black 1px 0 10px;
+    font-family: 'Kanit', sans-serif;
+}
+
+.header img {
+    height: 25vh;
+}
+
+.header h1 {
+   font-size: 5vh;
+}
+
+.login-portal {
+    height: 40vh;
+    width: 40vw;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 10px;
+    box-shadow: 3px 5px 67px -1px rgba(0, 0, 0, 0.44);
+}
+
+.title {
+    height: 10vh;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 4vh;
+}
+
+.inputfield {
+    display: flex;
+    flex-direction: column;
+    height: 10vh;
+    width: 20vw;
+    margin-bottom: 50px;
+}
+
+.form-control {
+    flex: 0 0 6vh;
+    height: 20vh;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+input:hover {
+    background-color: #E1F4EC;
+}
+
+#login-button {
+    height: 8vh;
+    width: 10vw;
+    font-family: 'Kanit', sans-serif;
+    font-size: 3vh;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
+    margin: 10vh;
+    height: 10vh;
+    justify-content: baseline;
+    text-align: center;
+    font-family: 'Kanit', sans-serif;
+    font-size: 4vh;
+}
+
+footer p {
+    margin-top: 10px;
+    font-size: 1.5vh;
+}
+
+@media only screen and (max-width: 1100px) {
+    .login-portal {
+        height: 40vh;
+        width: 80vw;
+    }
+    .header h1 {
+        font-size: 4vh;
+    }
+    .inputfield {
+      width: 50vw;
+    }
+    #login-button {
+        width: 20vw;
+    }
+}
