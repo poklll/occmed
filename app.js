@@ -12,7 +12,7 @@ app.use(pagerouter);
 
 var PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log('server is running on port %d',PORT);
+    console.log(`sever is running on port ${PORT}`);
 });
 
 
