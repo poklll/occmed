@@ -6,13 +6,19 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Ronnakorn Duangjunchot",
-  "license": "ISC",
   "dependencies": {
     "express": "^4.16.4",
     "mongodb": "^3.2.3",
     "mongoose": "^5.5.1",
     "socket.io": "^2.2.0",
     "vue": "^2.6.10"
+  },
+      "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": "11.12.0"
   }
 }
