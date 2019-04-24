@@ -33,11 +33,13 @@
     <div class="row">
         <div class="login-portal">
             <div class="title">E-logbook</div>
-            <div class="inputfield">
-                    <input class="form-control" type="text" id="username" placeholder="Username">
-                    <input class="form-control" type="password" id="password" placeholder="Password">
-            </div>
-            <button class="btn btn-info" id="login-button">Login</button>
+            <form class="d-flex justify-content-center" method="POST">
+                <div class="inputfield">
+                    <input class="form-control" type="text" name="username" id="username" placeholder="Username">
+                    <input class="form-control" type="password" name="password" id="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-info" id="login-button">Login</button>
+            </form>
         </div>
     </div>
 

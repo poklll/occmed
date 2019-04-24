@@ -1,0 +1,41 @@
+
+    <div id="notification-alert" v-bind:style="{ visibility: visible , width: open , background: color }">
+        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        <div id="notification-alert-text">{{message}}</div>
+    </div>
+    <div class="topnavbar" id="top-nav">
+        <div id="profile-bar">
+            <i class="fa fa-user-circle" aria-hidden="true"></i>
+            <div id="profile-bar-text">
+                <p class="name"><%=name%></p>
+                <p class="position"><%=position%></p>
+            </div>
+        </div>
+        <div class="topnavitem" id="search-bar">
+            <div id="search-sign"><i class="fa fa-search" aria-hidden="true"></i></div>
+            <input type="text" class="form-control" aria-describedby="helpId" placeholder="Search">
+        </div>
+        <div id="navitem-group">
+            <div class="topnavitem">
+                <i class="fas fa-list-alt"></i>
+            </div>
+            <div class="topnavitem" id="notification-sign">
+                <i class="fa fa-bell" aria-hidden="true"></i>
+                <p class="number"><%=notification.unread%></p>
+            </div>
+        </div>
+
+    </div>
+    <div class="notificationbar" id="notibar"></div>
+    <div class="content" id="viewport">
+        <div class="topnavitem" id="search-bar-mobile">
+            <div id="search-sign"><i class="fa fa-search" aria-hidden="true"></i></div>
+            <input id="search-bar-mobile-input" type="text" class="form-control" aria-describedby="helpId"
+                onfocus="searcheffect('collapse')" onblur="searcheffect('visible')" placeholder="Search">
+        </div>
+        <label for="camera" id="camera-label" ><i class="fa fa-qrcode" aria-hidden="true"></i></label>
+        <input  id="camera"type="file" accept="image" capture="camera" onchange="camerainput(event)">
+        <input type="text" id="qr" placeholder="qr code" oninput="generateqr()">
+        <img src="" alt="" id="myqr">
+    </div>
+   
