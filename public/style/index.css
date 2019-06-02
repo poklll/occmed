@@ -16,6 +16,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 50px;
 }
 
 .header {
@@ -25,6 +26,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+    padding-top: 50px;
     color: white;
     text-shadow: black 1px 0 10px;
     font-family: 'Kanit', sans-serif;
@@ -39,21 +41,38 @@ body {
 }
 
 .login-portal {
-    height: 350px;
-    width: 40vw;
+    height: 260px;
+    width: 30vw;
     background-color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    border-radius: 50px;
+    border-radius: 200px;
     box-shadow: 3px 5px 67px -1px rgba(0, 0, 0, 0.44);
 }
 
 .login-portal  h1{
     margin-top: 20px;
-   font-size: 40px;
+   font-size: 30px;
 }
+
+.formtab{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: gainsboro;
+    border-radius: 10px;
+    padding-left: 10px;
+}
+
+.formtab>i{
+    font-size: 20px;
+    height: 2vh;
+    width: 4vh;
+}
+
 
 .title {
     height: 10vh;
@@ -70,7 +89,7 @@ body {
 }
 
 #email,#password{
-    height: 50px;
+    height: 40px;
     width: 40vh;
 }
 input:hover {
@@ -97,13 +116,13 @@ footer p {
 @media only screen and (max-width: 1100px) {
     .login-portal {
         height: 360px;
-        width: 60vw;
+        width: 50vw;
     }
     .login-portal h1 {
         font-size: 40px;
     }
-    label{
-        font-size: 15px;
+    .formtab>i{
+        width: 4vh;
     }
     .header{
         height: 250px;
@@ -116,11 +135,20 @@ footer p {
         font-size: 35px;
     }
     #email,#password {
-      width: 50vw;
+      width: 40vw;
     }
   
 }
 
+@media only screen and (max-width: 800px) {
+    .login-portal {
+        height: 300px;
+        width: 50vw;
+    }
+   .formtab>i{
+       width: 3vh;
+   }
+}
 
 
 @media only screen and (max-width: 450px) {
@@ -149,3 +177,9 @@ footer p {
     }
 
 }
+
+@media only screen and (max-width: 420px) {
+    .formtab>i{
+        width: 4vh;
+    }
+ }
