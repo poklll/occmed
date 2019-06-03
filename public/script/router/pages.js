@@ -16,7 +16,7 @@ router.get('/',(req, res) => {
 
 router.get('/dashboard', ensureAuthenticated,(req, res) => {
     res.render('dashboard',{layout: '../layouts/dashboard',
-    name: req.user.name ,position: req.user.authlevel ,notification: {unread: 24}});
+    name: req.user.firstname ,position: req.user.position ,notification: {unread: 20}});
 });
 
 // Login Page
@@ -27,10 +27,10 @@ router.get('/register', (req, res) => res.render('register'));
 
 // Register
 router.post('/register', (req, res) => {
-  const { name, email, password, password2 ,authlevel } = req.body;
+  const { firstname,lastname, email, password, password2 ,position,authlevel } = req.body;
   let errors = [];
 
-  if (!name || !email || !password || !password2 || !authlevel) {
+  if (!firstname || !lastname || !email || !password || !password2 || !position || !authlevel) {
     errors.push({ msg: 'Please enter all fields' });
   }
 
@@ -45,10 +45,12 @@ router.post('/register', (req, res) => {
   if (errors.length > 0) {
     res.render('register', {
       errors,
-      name,
+      firstname,
+      lastname,
       email,
       password,
-      password2
+      password2,
+
     });
   } else {
     User.findOne({ email: email }).then(user => {
@@ -56,16 +58,19 @@ router.post('/register', (req, res) => {
         errors.push({ msg: 'Email already exists' });
         res.render('register', {
           errors,
-          name,
+          firstname,
+          lastname,
           email,
           password,
           password2
         });
       } else {
         const newUser = new User({
-          name,
+          firstname,
+          lastname,
           email,
           password,
+          position,
           authlevel
         });
 

@@ -7,24 +7,24 @@
       <% include ./partials/messages %>
       <form action="/register" method="POST">
         <div class="form-group">
-          <label for="name">First name</label>
+          <label for="firstname">First name</label>
           <input
             type="name"
-            id="name"
-            name="name"
+            id="firstname"
+            name="firstname"
             class="form-control"
-            placeholder="Enter Name"
+            placeholder="Enter First name"
             value="<%= typeof name != 'undefined' ? name : '' %>"
           />
         </div>
         <div class="form-group">
-          <label for="name">First name</label>
+          <label for="lastname">Last name</label>
           <input
             type="name"
-            id="name"
-            name="name"
+            id="lastame"
+            name="lastname"
             class="form-control"
-            placeholder="Enter Name"
+            placeholder="Enter Last name"
             value="<%= typeof name != 'undefined' ? name : '' %>"
           />
         </div>
@@ -62,7 +62,20 @@
           />
         </div>
         <div class="form-group">
-          <label for="authlevel">Position</label>
+            <label for="position">Position</label>
+            <select 
+               id="position"
+               name="position"
+               class="w-100 text-center"
+            >
+              <option value="Resident1">Resident1</option>
+              <option value="Resident2">Resident2</option>
+              <option value="Resident3">Resident3</option>
+              <option value="Professor">Professor</option>
+            </select>
+          </div>
+        <div class="form-group">
+          <label for="authlevel">Authentication level</label>
           <select 
              id="authlevel"
              name="authlevel"
@@ -70,6 +83,7 @@
           >
             <option value="user">User</option>
             <option value="instructor">Instructor</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
         <button type="submit" class="btn btn-primary btn-block">
