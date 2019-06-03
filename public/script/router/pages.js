@@ -7,6 +7,7 @@ const flash = require('connect-flash');
 const app = express();
 // Load User model
 const User = require('../models/user');
+const Requirement = require('../models/requirement');
 const { ensureAuthenticated} = require('../config/auth');
 
 app.use(flash());
