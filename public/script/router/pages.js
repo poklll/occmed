@@ -16,7 +16,7 @@ router.get('/',(req, res) => {
 
 router.get('/dashboard', ensureAuthenticated,(req, res) => {
     res.render('dashboard',{layout: '../layouts/dashboard',
-    name: req.user.firstname ,position: req.user.position ,notification: {unread: 20}});
+    name: req.user.firstname ,position: req.user.position ,notification: {message: "hello world",type: "success-notification",unread: 20}});
 });
 
 // Login Page

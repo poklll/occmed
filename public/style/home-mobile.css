@@ -17,7 +17,36 @@
         font-family: Arial, 'FontAwesome';
         font-size: 2vw;
     }
+    .notification{
+        margin-top: 10vh;
+        margin-left: 50vw;
+        width: 50vw;
+    }
+}
 
+@media only screen and (max-width: 800px) {
+    #profile-bar{
+        width: 40vw;
+    }
+    #profile-bar>div{
+        font-size: 3vw;
+    }
+    #profile-bar div>.position{
+        font-size: 2vw;
+    }
+    #search-bar{
+        width: 30vw;
+    }
+    #search-bar>.form-control{
+        width: 20vw;
+        font-family: Arial, 'FontAwesome';
+        font-size: 2vw;
+    }
+    .notification{
+        margin-top: 10vh;
+        margin-left: 50vw;
+        width: 50vw;
+    }
 }
 
 @media only screen and (max-width: 500px) {
@@ -44,6 +73,11 @@
     }
     #viewport {
         padding-top: 11vh;
+    }
+    .notification{
+        margin-top: 10vh;
+        margin-left: 0;
+        width: 100vw;
     }
 }
 @media only screen and (max-height: 500px)

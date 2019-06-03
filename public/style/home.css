@@ -1,5 +1,6 @@
 body {
    overflow-x: hidden;
+   overflow-y: scroll;
 }
 
 #top-nav {
@@ -38,10 +39,11 @@ body {
     color: gray;
 }
 
-#notification-alert {
+.notification {
     margin-top: 10vh;
     margin-left: 80vw;
-    opacity: 0.7;
+    width: 20vw;
+    opacity: 0.9;
     height: 10vh;
     display: flex;
     position: fixed;
@@ -49,10 +51,10 @@ body {
     justify-content: center;
     align-items: center;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-    width: 0;
     color: white;
     box-shadow: 3px 5px 20px -1px rgba(0, 0, 0, 0.44);
     cursor: pointer;
+    transition: width 2s, height 4s;
 }
 #notification-alert>i {
     color: white;
@@ -187,3 +189,10 @@ footer p {
     width: 150px;
     border: 1px solid black;
 }
+
+
+.success-notification{
+    background-color: greenyellow;
+    
+}
+
