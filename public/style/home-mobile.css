@@ -1,0 +1,57 @@
+
+@media only screen and (max-width: 1100px) {
+    #profile-bar{
+        width: 40vw;
+    }
+    #profile-bar>div{
+        font-size: 3vw;
+    }
+    #profile-bar div>.position{
+        font-size: 2vw;
+    }
+    #search-bar{
+        width: 30vw;
+    }
+    #search-bar>.form-control{
+        width: 20vw;
+        font-family: Arial, 'FontAwesome';
+        font-size: 2vw;
+    }
+
+}
+
+@media only screen and (max-width: 500px) {
+    #search-bar-mobile{
+        visibility: visible;
+    }
+    #search-bar{
+        visibility: collapse;
+    }
+    #profile-bar{
+        width: 50vw;
+        padding-left: 10px;
+        margin-right: -25vw;
+    }
+    #profile-bar i{
+        font-size: 8vw;
+    }
+    #profile-bar>div{
+        width: 40vw;
+        font-size: 4vw;
+    }
+    #profile-bar div>.position{
+        font-size: 3vw;
+    }
+    #viewport {
+        padding-top: 11vh;
+    }
+}
+@media only screen and (max-height: 500px)
+{   #profile-bar{
+    width: 30vw;
+    }
+    #profile-bar>div{
+        width: 20vw;
+        font-size: 2vw;
+    }
+}
