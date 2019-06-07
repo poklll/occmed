@@ -5,6 +5,7 @@ body {
     width: 100vw;
     min-height: 130vh;
     height: auto;
+    overflow-x: hidden;
 }
 
 .card {
