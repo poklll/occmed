@@ -1,32 +1,43 @@
 const mongoose = require('mongoose');
 
-const RequirementSchema = new mongoose.Schema({
-  name: String,
-  description: String,
-  completed: Boolean,
-  totalrequirement: Number,
-  currentrequirement: Number,
-  comment: [],
+const NoteSchema = new mongoose.Schema({
+  content: String,
   date: {
     type: Date,
     default: Date.now
   }
  });
- 
+
+const CommentSchema = new mongoose.Schema({
+  content: String,
+  date: {
+    type: Date,
+    default: Date.now
+  }
+ });
+
 const RequirementSchema = new mongoose.Schema({
  name: String,
  description: String,
  completed: Boolean,
  totalrequirement: Number,
  currentrequirement: Number,
- comment: [],
- date: {
+ note: [NoteSchema],
+ comment: [CommentSchema],
+ modifieddate: {
    type: Date,
    default: Date.now
- }
+ },
+ status: String,
+ approved: Boolean
 
 });
 
-const User = mongoose.model('Requirements', RequirementSchema);
+const Requirement = mongoose.model('Requirements', RequirementSchema);
 
-module.exports = User;
+module.exports ={
+  Requirement : Requirement,
+  NoteSchema: NoteSchema,
+  CommentSchema:CommentSchema,
+  RequirementSchema:RequirementSchema
+} ;

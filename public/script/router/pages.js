@@ -7,7 +7,6 @@ const flash = require('connect-flash');
 const app = express();
 // Load User model
 const User = require('../models/user');
-const Requirement = require('../models/requirement');
 const { ensureAuthenticated} = require('../config/auth');
 
 app.use(flash());
@@ -72,8 +71,11 @@ router.post('/register', (req, res) => {
           email,
           password,
           position,
-          authlevel
+          authlevel,
         });
+
+        newUser.requirements.push({name:"new requirement"});
+        newUser.requirements[0].note.push({content:"ok"});
 
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
