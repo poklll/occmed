@@ -1,1 +1,11 @@
-<% include ./partials/components/event %>
+
+<% sections.forEach((section)=>{ %>
+<div class="card section shadow-drop-br scale-in-hor-left">
+    <img class="card-img-top" src="holder.js/100x180/" alt="">
+    <div class="card-body">
+        <h4 class="card-title"><%=section.name %></h4>
+        <p class="card-text"></p>
+        <% include ./partials/components/FFD %>
+    </div>
+</div>
+<%}); %>

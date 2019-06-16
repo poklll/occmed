@@ -8,6 +8,7 @@
         <div id="profile-bar-text">
             <p class="name"><%=name%></p>
             <p class="position"><%=position%></p>
+
         </div>
     </div>
     <div class="topnavitem" id="search-bar">
@@ -32,8 +33,9 @@
         <input id="search-bar-mobile-input" type="text" class="form-control" aria-describedby="helpId"
             onfocus="searcheffect('collapse')" onblur="searcheffect('visible')" placeholder="Search">
     </div>
-    <label for="camera" id="camera-label"><i class="fa fa-qrcode" aria-hidden="true"></i></label>
-    <input id="camera" type="file" accept="image" capture="camera" onchange="camerainput(event)">
-    <input type="text" id="qr" placeholder="qr code" oninput="generateqr()">
-    <img src="" alt="" id="myqr">
+    <div class="item-container">
+    <% include ./testitem %>
+    </div>
+
+
 </div>
