@@ -10,21 +10,24 @@ const NoteSchema = new mongoose.Schema({
 
 const CommentSchema = new mongoose.Schema({
   content: String,
+  author: String,
   date: {
     type: Date,
     default: Date.now
   }
  });
 
-const RequirementSchema = new mongoose.Schema({
+const SectionSchema = new mongoose.Schema({
  name: String,
  description: String,
+ type: String,
  completed: Boolean,
  totalrequirement: Number,
  currentrequirement: Number,
+ requirement: [],
  note: [NoteSchema],
  comment: [CommentSchema],
- modifieddate: {
+ lastmodifieddate: {
    type: Date,
    default: Date.now
  },
@@ -33,11 +36,7 @@ const RequirementSchema = new mongoose.Schema({
 
 });
 
-const Requirement = mongoose.model('Requirements', RequirementSchema);
-
 module.exports ={
-  Requirement : Requirement,
   NoteSchema: NoteSchema,
-  CommentSchema:CommentSchema,
-  RequirementSchema:RequirementSchema
+  CommentSchema:CommentSchema
 } ;

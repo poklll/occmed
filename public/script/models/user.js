@@ -31,7 +31,6 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  requirements: [Requirement.RequirementSchema]
 });
 
 const User = mongoose.model('User', UserSchema);

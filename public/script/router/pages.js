@@ -25,6 +25,10 @@ router.get('/login', (req, res) => res.render('login',{layout: '../layouts/login
 // Register Page
 router.get('/register', (req, res) => res.render('register'));
 
+// Requirement Editor
+router.get('/test', (req, res) => res.render('testitem'));
+
+
 // Register
 router.post('/register', (req, res) => {
   const { firstname,lastname, email, password, password2 ,position,authlevel } = req.body;
@@ -74,8 +78,6 @@ router.post('/register', (req, res) => {
           authlevel,
         });
 
-        newUser.requirements.push({name:"new requirement"});
-        newUser.requirements[0].note.push({content:"ok"});
 
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
