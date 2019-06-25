@@ -1,19 +1,24 @@
+<% include ./partials/script %>
 <div id="notification-alert" class="notification <%=notification.type%> fade show">
     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
     <div id="notification-alert-text"><%=notification.message%></div>
 </div>
 <div class="topnavbar" id="top-nav">
     <div id="profile-bar">
+        <div id="logout-button">
+            <p onclick="location.href ='/logout'">Logout</p>
+            <a href="/logout"><i class="fas fa-angle-left" style="font-size: 50px;"></i></a>
+        </div>
         <i class="fa fa-user-circle" aria-hidden="true"></i>
         <div id="profile-bar-text">
             <p class="name"><%=name%></p>
             <p class="position"><%=position%></p>
-
         </div>
     </div>
     <div class="topnavitem" id="search-bar">
         <div id="search-sign"><i class="fa fa-search" aria-hidden="true"></i></div>
-        <input type="text" class="form-control" aria-describedby="helpId" placeholder="Search">
+        <input id="search" type="text" class="form-control" aria-describedby="helpId" placeholder="Search"
+            oninput="wordsearch()">
     </div>
     <div id="navitem-group">
         <div class="topnavitem">
@@ -23,18 +28,26 @@
             <i class="fa fa-bell" aria-hidden="true"></i>
             <p class="number"><%=notification.unread%></p>
         </div>
+        <div class="topnavitem">
+            <i class="fa fa-download" aria-hidden="true"></i>
+        </div>
     </div>
 
 </div>
 <div class="notificationbar" id="notibar"></div>
+
 <div class="content" id="viewport">
     <div class="topnavitem" id="search-bar-mobile">
         <div id="search-sign"><i class="fa fa-search" aria-hidden="true"></i></div>
         <input id="search-bar-mobile-input" type="text" class="form-control" aria-describedby="helpId"
             onfocus="searcheffect('collapse')" onblur="searcheffect('visible')" placeholder="Search">
     </div>
+    <div class="d-flex justify-content-center">
+        <% include ./partials/components/breadcrumb %>
+    </div>
+
     <div class="item-container">
-    <% include ./testitem %>
+        <% include ./testitem %>
     </div>
 
 
