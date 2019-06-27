@@ -194,7 +194,7 @@ footer p {
 
 
 .success-notification{
-    background-color: greenyellow;
+    background-color: palegreen;
     
 }
 
@@ -208,7 +208,7 @@ footer p {
 }
 
 .section:hover{
-    background-color: palegoldenrod;
+    background-color: powderblue;
 
 }
 .item-container{
@@ -220,15 +220,18 @@ footer p {
     min-height: 80vh;
     justify-content: center;
 }
-
+#logout-button :hover{
+      width: inherit;
+}
 
 #logout-button > p{
     display: none;
 }
 
 #logout-button:hover > p{
+    font-family: Impact;
     display: inline;
-    font-size: 20px;
+    font-size: 30px;
     color: red;
     cursor: pointer;
 }
@@ -236,5 +239,12 @@ footer p {
     color: red;
 }
 
+#logout-button:hover + i+ #profile-bar-text{
+    display: none;
+}
+
+#logout-button:hover + i{
+    display: none;
+}
 
 

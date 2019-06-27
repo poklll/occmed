@@ -23,10 +23,30 @@ router.get('/dashboard', ensureAuthenticated,(req, res) => {
     name: req.user.firstname ,position: req.user.position ,notification: {message: "hello world",type: "success-notification",unread: 20 }, sections: Sections });
 });
 //form
-router.get('/')
-
-
+router.get('/section/:name',(req,res)=>{
+   name = req.params.name;
+   Sections.map(section => {
+      if(section.name === name)
+      {
+           res.send(section);
+      }
+   });
+ 
+});
 //item
+router.get('/section/:name/:item',(req,res)=>{
+  name = req.params.name;
+  item = req.params.item;
+  Sections.map(section => {
+     if(section.name === name)
+     {    
+          section.item.map(item=>{
+            res.send(item);
+          });
+     }
+  });
+});
+
 
 // Login Page
 router.get('/login', (req, res) => res.render('login',{layout: '../layouts/login'}));
