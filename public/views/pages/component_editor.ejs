@@ -1,0 +1,66 @@
+<div class="row mt-5 mb-5">
+  <div class="col-md-10 col-sm-15">
+    <div class="card card-body">
+      <h1 class="text-center mb-3">
+        <i class="fa fa-cog" aria-hidden="true"></i> Requirement Editor
+      </h1>
+      <% include ./partials/messages %>
+      <form action="/component_editor" method="POST">
+        <div class="form-group">
+          <label for="sectionname">Name</label>
+          <input type="text" id="sectionname" name="sectionname" class="form-control" placeholder="Enter name"
+            value="<%= typeof sectionname != 'undefined' ? sectionname : '' %>" />
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input type="text" id="description" name="description" class="form-control" placeholder="Enter description"
+            value="<%= typeof description != 'undefined' ? description : '' %>" />
+        </div>
+        <div class="form-group">
+          <label for="total">Total requirement</label>
+          <input type="number" id="total" name="total" class="form-control"
+            value="<%= typeof total != 'undefined' ? total : 1 %>" />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="mt-5">
+  <h1>Preview</h1>
+  <div class="row mt-5 mb-5">
+    <div class="col-md-12">
+      <div class="card card-body">
+        <h1 id="section_name"class="text-center mb-3">
+          Form Editor
+        </h1>
+        <div id="component_container" >
+        </div>
+        <hr>
+        <div class="editor" style="color: balck; background-color: palegreen; border-radius: 20px; padding: 20px; width: 50vw;">
+          <h2>Editor</h2>
+          <label for="component_name">ชื่อข้อมูล</label>
+          <input type="text" name="component_name" id="component_name" class="form-control w-20 mb-2" placeholder="Enter component name">
+          <div>
+            ชนืดข้อมูล :
+            <select id="component_type"  class="w-20 text-center">
+              <option value="Text">Text</option>
+              <option value="Long text">Long text</option>
+              <option value="Number">Number</option>
+              <option value="Choices">Choices</option>
+              <option value="Date">Date</option>
+              <option value="File">File</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-success btn-block" onclick="additem()">
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

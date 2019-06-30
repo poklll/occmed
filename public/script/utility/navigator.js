@@ -12,7 +12,7 @@ $(document).ready(() => {
 function getitem(name) {
   var res;
   var req = new XMLHttpRequest;
-  var section = "/section/"+name;
+  var section = "/"+name;
   req.open("GET",section,true);
   req.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {

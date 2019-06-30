@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const pagerouter = require('./public/script/router/pages');
+const page = require('./public/script/router/pages');
+const component = require('./public/script/router/components');
+const login = require('./public/script/router/login');
+const api = require('./public/script/router/api');
 const DB = require('./public/script/config/keys');
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
@@ -53,7 +56,10 @@ app.use(function(req, res, next) {
 //router
 app.use('/asset', express.static(path.join(__dirname, '/public/asset')));
 app.use('/public', express.static(path.join(__dirname, '/public')));
-app.use(pagerouter);
+app.use(page);
+app.use(login);
+app.use(component);
+app.use(api);
 
 
 

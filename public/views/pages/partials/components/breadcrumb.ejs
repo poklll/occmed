@@ -1,18 +1,22 @@
 <ul class="breadcrumb">
+       <% if(typeof item != 'undefined' )  {%>
         <li>
           <a href="#">
             <span class="icon"><i class="fa fa-book" aria-hidden="true"></i></span>
-            <span class="text">Item</span>
+            <span class="text"><%=item%></span>
           </a>
         </li>
+        <% };%>
+        <% if(typeof section != 'undefined') {%>
         <li>
           <a href="#">
             <span class="icon"><i class="fa fa-bookmark" aria-hidden="true"></i></span>
-            <span class="text">Section</span>
+            <span class="text"><%=section%></span>
           </a>
         </li>
+        <% };%>
         <li>
-          <a href="#" onclick="home()">
+          <a href="/dashboard" onclick="home()">
             <span class="icon"><i class="fa fa-home" aria-hidden="true"></i></span>
           </a>
         </li>
