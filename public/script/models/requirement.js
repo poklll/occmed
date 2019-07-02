@@ -9,7 +9,7 @@ const SectionSchema = new mongoose.Schema({
    type: Number,
    default: 0
  },
- component: [String],
+ component: [],
  value: [],
  note: [String],
  comment: [String],

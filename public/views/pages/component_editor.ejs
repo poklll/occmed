@@ -1,3 +1,6 @@
+
+
+
 <div class="row mt-5 mb-5">
   <div class="col-md-10 col-sm-15">
     <div class="card card-body">
@@ -30,35 +33,39 @@
 </div>
 
 <div class="mt-5">
-  <h1>Preview</h1>
   <div class="row mt-5 mb-5">
     <div class="col-md-12">
       <div class="card card-body">
-        <h1 id="section_name"class="text-center mb-3">
-          Form Editor
+        <h1 id="section_name" class="text-center mb-3">
+          <i class="fa fa-book" aria-hidden="true"></i> Form Editor
         </h1>
-        <div id="component_container" >
+
+        <div id="component_container">
+        </div>
+        <div class="d-flex justify-content-center">
+        <div id="add_button" class="btn btn-success d-flex justify-content-around">
+          <i id="add_icon" class="fa fa-plus" aria-hidden="true"></i>
+          <i class="fa fa-font" aria-hidden="true"></i>
+          <i class="fas fa-align-justify    "></i>
+          <i class="fa fa-calculator" aria-hidden="true"></i>
+          <i class="fa fa-list" aria-hidden="true"></i>
+          <i class="fas fa-calendar-alt    "></i>
+          <i class="fa fa-file" aria-hidden="true"></i>
+        </div>
         </div>
         <hr>
-        <div class="editor" style="color: balck; background-color: palegreen; border-radius: 20px; padding: 20px; width: 50vw;">
-          <h2>Editor</h2>
-          <label for="component_name">ชื่อข้อมูล</label>
-          <input type="text" name="component_name" id="component_name" class="form-control w-20 mb-2" placeholder="Enter component name">
-          <div>
-            ชนืดข้อมูล :
-            <select id="component_type"  class="w-20 text-center">
-              <option value="Text">Text</option>
-              <option value="Long text">Long text</option>
-              <option value="Number">Number</option>
-              <option value="Choices">Choices</option>
-              <option value="Date">Date</option>
-              <option value="File">File</option>
-            </select>
-          </div>
+        <div id="choice_editor" class="editor" style="background-color: rgb(241, 239, 207);">
+          <h2>Choice Editor</h2>
+          <label for="component_name">ชื่อตัวเลือก</label>
+          <div id="choice_container"></div>
+          <input type="text" name="choice_name" id="choice_name" class="form-control w-20 mb-2"
+            placeholder="Enter choice name">
+          <button id="addchoice_button" class="btn btn-warning btn-block" onclick="addChoice()">
+            Add choice
+          </button>
         </div>
-
-        <button class="btn btn-success btn-block" onclick="additem()">
-          Add
+        <button id="additem_button" class="btn btn-secondary btn-block" onclick="preview()">
+          Preview
         </button>
       </div>
     </div>

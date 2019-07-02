@@ -6,18 +6,8 @@ body {
     min-height: 130vh;
     height: auto;
     overflow-x: hidden;
-}
-
-.container {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-evenly;
-    margin: 0;
-}
-
-.editor {
-    margin-bottom: 10px;
+    flex-direction: row;
 }
 
 #component_type {
@@ -29,22 +19,117 @@ body {
     height: 40px;
 }
 
-label{
+#choice_editor{
+    display: none;
+}
+h1{
+    font-size: 30px;
+}
+label {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 20px;
 }
-.component_item{
+
+textarea {
+    box-sizing: border-box;
+    min-height: 200px;
+    overflow-x: hidden;
+    /* for Firefox (issue #5) */
+    border-radius: 20px;
+}
+
+input {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px !important;
+}
+
+
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 0;
+}
+
+
+.component_item {
     background-color: rgba(238, 235, 235, 0.973) !important;
     padding: 20px;
     border-radius: 20px;
 }
-textarea {
-    box-sizing: border-box;
-    min-height: 31px;
-    overflow-x: hidden; /* for Firefox (issue #5) */
-    border-radius: 20px;
-  }
 
 .card {
     box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);
+}
+
+.custom-control{
+   font-size: 20px;
+   display: flex;
+   align-items: center;
+}
+
+
+/* form editor*/
+#component_container{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+    width: 600px;
+}
+#add_button{
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    border: 1px solid black;    
+    color: white;
+    font-size: 20px;
+}
+#add_button > i {
+    display: none;
+}
+
+#add_button > #add_icon {
+    display: inline;
+}
+
+#add_button:hover{
+    border-radius: 20px;
+    width: 100%;
+    background: none;
+    background-color: whitesmoke;
+}
+
+#add_button:hover >h1{
+   display: none;
+}
+
+#add_button:hover >i{
+    color: black;
+    display: inline;
+ }
+
+ #add_button:hover > #add_icon{
+     display:none;
+ }
+
+ #add_button:hover >i:hover{
+      color: gray;
+ }
+
+#form_list{
+   position: absolute;
+   z-index: 2;
+   height: auto;
+   min-height: inherit;
+   width: 200px;
+   background-color: gainsboro;
+}
+
+@media only screen and (max-width: 500px) {
+    #component_container {
+        width: 80vw;
+    }
 }
