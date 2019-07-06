@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const page = require('./public/script/router/pages');
-const component = require('./public/script/router/components');
+const form = require('./public/script/router/form');
 const login = require('./public/script/router/login');
+const register = require('./public/script/router/register');
 const api = require('./public/script/router/api');
 const DB = require('./public/script/config/keys');
 const expressLayouts = require('express-ejs-layouts');
@@ -57,13 +58,14 @@ app.use(function(req, res, next) {
 app.use('/asset', express.static(path.join(__dirname, '/public/asset')));
 app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use(page);
+app.use(register);
 app.use(login);
-app.use(component);
+app.use(form);
 app.use(api);
 
 
 
-var PORT = process.env.PORT || 5000;
+var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`sever is running on port ${PORT}`);
 });

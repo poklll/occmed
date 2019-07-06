@@ -8,7 +8,7 @@
         <i class="fa fa-cog" aria-hidden="true"></i> Requirement Editor
       </h1>
       <% include ./partials/messages %>
-      <form action="/component_editor" method="POST">
+      <form action="/form_editor" method="POST">
         <div class="form-group">
           <label for="sectionname">Name</label>
           <input type="text" id="sectionname" name="sectionname" class="form-control" placeholder="Enter name"
@@ -39,18 +39,20 @@
         <h1 id="section_name" class="text-center mb-3">
           <i class="fa fa-book" aria-hidden="true"></i> Form Editor
         </h1>
-
+        <div id="message_container"></div>
         <div id="component_container">
         </div>
+        <div id="render_container">
+        </div>
         <div class="d-flex justify-content-center">
-        <div id="add_button" class="btn btn-success d-flex justify-content-around">
+        <div id="add_button" class="btn btn-success">
           <i id="add_icon" class="fa fa-plus" aria-hidden="true"></i>
-          <i class="fa fa-font" aria-hidden="true"></i>
-          <i class="fas fa-align-justify    "></i>
-          <i class="fa fa-calculator" aria-hidden="true"></i>
-          <i class="fa fa-list" aria-hidden="true"></i>
-          <i class="fas fa-calendar-alt    "></i>
-          <i class="fa fa-file" aria-hidden="true"></i>
+          <i class="fa fa-font" aria-hidden="true" onclick="addItem('Text')"></i>
+          <i class="fas fa-align-justify" onclick="addItem('Long text')"></i>
+          <i class="fa fa-calculator" aria-hidden="true" onclick="addItem('Number')"></i>
+          <i class="fa fa-list" aria-hidden="true" onclick="addItem('Choices')"></i>
+          <i class="fas fa-calendar-alt" onclick="addItem('Date')"></i>
+          <i class="fa fa-file" aria-hidden="true" onclick="addItem('File')"></i>
         </div>
         </div>
         <hr>
@@ -64,9 +66,7 @@
             Add choice
           </button>
         </div>
-        <button id="additem_button" class="btn btn-secondary btn-block" onclick="preview()">
-          Preview
-        </button>
+        <button id="preview_button" class="btn btn-secondary btn-block" onclick="preview(this)">Preview</button>
       </div>
     </div>
   </div>

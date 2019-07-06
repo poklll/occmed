@@ -8,10 +8,10 @@ const { ensureAuthenticated} = require('../config/auth');
 
 app.use(flash());
 //component editor page 
-router.get('/component_editor', (req, res) => res.render('component_editor',{layout: '../layouts/component_editor'}));
+router.get('/form_editor', (req, res) => res.render('form_editor',{layout: '../layouts/form_editor'}));
 
 // Addcomponent
-router.post('/component_editor', (req, res) => {
+router.post('/form_editor', (req, res) => {
   const { sectionname,component,description,total } = req.body;
   let errors = [];
 
@@ -20,8 +20,8 @@ router.post('/component_editor', (req, res) => {
   }
 
   if (errors.length > 0) {
-    res.render('component_editor',{
-     layout: '../layouts/component_editor',
+    res.render('form_editor',{
+     layout: '../layouts/form_editor',
      errors,
      sectionname,
      component,
@@ -32,8 +32,8 @@ router.post('/component_editor', (req, res) => {
     Section.findOne({ name: name }).then(section => {
       if (section) {
         errors.push({ msg: 'Requirement is already exist' });
-        res.render('component_editor', {
-          layout: '../layouts/component_editor',
+        res.render('form_editor', {
+          layout: '../layouts/form_editor',
           errors,
           sectionname,
           component,
@@ -53,7 +53,7 @@ router.post('/component_editor', (req, res) => {
             'success_msg',
             'Requirement is now registered'
           );
-          res.redirect('/component_editor');
+          res.redirect('/form_editor');
         })
         .catch(err => console.log(err));
       }

@@ -22,38 +22,25 @@ HTMLTextAreaElement.prototype.setSelection = function (start, end) { //change th
     this.focus();
 };
 
-var textarea = document.getElementsByTagName('textarea')[0]; 
-
-textarea.onkeydown = function(event) {
-    
-    //support tab on textarea
-    if (event.keyCode == 9) { //tab was pressed
-        var newCaretPosition;
-        newCaretPosition = textarea.getCaretPosition() + "    ".length;
-        textarea.value = textarea.value.substring(0, textarea.getCaretPosition()) + "    " + textarea.value.substring(textarea.getCaretPosition(), textarea.value.length);
-        textarea.setCaretPosition(newCaretPosition);
-        return false;
-    }
-    if(event.keyCode == 8){ //backspace
-        if (textarea.value.substring(textarea.getCaretPosition() - 4, textarea.getCaretPosition()) == "    ") { //it's a tab space
-            var newCaretPosition;
-            newCaretPosition = textarea.getCaretPosition() - 3;
-            textarea.value = textarea.value.substring(0, textarea.getCaretPosition() - 3) + textarea.value.substring(textarea.getCaretPosition(), textarea.value.length);
-            textarea.setCaretPosition(newCaretPosition);
-        }
-    }
-    if(event.keyCode == 37){ //left arrow
-        var newCaretPosition;
-        if (textarea.value.substring(textarea.getCaretPosition() - 4, textarea.getCaretPosition()) == "    ") { //it's a tab space
-            newCaretPosition = textarea.getCaretPosition() - 3;
-            textarea.setCaretPosition(newCaretPosition);
-        }    
-    }
-    if(event.keyCode == 39){ //right arrow
-        var newCaretPosition;
-        if (textarea.value.substring(textarea.getCaretPosition() + 4, textarea.getCaretPosition()) == "    ") { //it's a tab space
-            newCaretPosition = textarea.getCaretPosition() + 3;
-            textarea.setCaretPosition(newCaretPosition);
-        }
-    } 
+function addTabsupport(){
+      $('textarea').each((index,value)=>{
+            $(value).on('keydown',(event)=>{
+                if (event.keyCode == 9) { //tab was pressed
+                    var newCaretPosition;
+                    newCaretPosition = value.getCaretPosition() + "    ".length;
+                    value.value = value.value.substring(0, value.getCaretPosition()) + "    " + value.value.substring(value.getCaretPosition(), value.value.length);
+                    value.setCaretPosition(newCaretPosition);
+                    return false;
+                }
+                if(event.keyCode == 8){ //backspace
+                    if (value.value.substring(value.getCaretPosition() - 4, value.getCaretPosition()) == "    ") { //it's a tab space
+                        var newCaretPosition;
+                        newCaretPosition = value.getCaretPosition() - 3;
+                        value.value = value.value.substring(0, value.getCaretPosition() - 3) + value.value.substring(value.getCaretPosition(), value.value.length);
+                        value.setCaretPosition(newCaretPosition);
+                    }
+                }
+              });
+      });
 }
+
