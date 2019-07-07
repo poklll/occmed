@@ -39,6 +39,8 @@
         <h1 id="section_name" class="text-center mb-3">
           <i class="fa fa-book" aria-hidden="true"></i> Form Editor
         </h1>
+        <h3 class="ml-3"><span id="status" class="badge badge-secondary">UNSAVED</span></h3>
+        <hr>
         <div id="message_container"></div>
         <div id="component_container">
         </div>
@@ -52,22 +54,13 @@
           <i class="fa fa-calculator" aria-hidden="true" onclick="addItem('Number')"></i>
           <i class="fa fa-list" aria-hidden="true" onclick="addItem('Choices')"></i>
           <i class="fas fa-calendar-alt" onclick="addItem('Date')"></i>
+          <i class="fas fa-image    "></i>
           <i class="fa fa-file" aria-hidden="true" onclick="addItem('File')"></i>
         </div>
         </div>
         <hr>
-        <div id="choice_editor" class="editor" style="background-color: rgb(241, 239, 207);">
-          <h2>Choice Editor</h2>
-          <label for="component_name">ชื่อตัวเลือก</label>
-          <div id="choice_container"></div>
-          <input type="text" name="choice_name" id="choice_name" class="form-control w-20 mb-2"
-            placeholder="Enter choice name">
-          <button id="addchoice_button" class="btn btn-warning btn-block" onclick="addChoice()">
-            Add choice
-          </button>
-        </div>
         <button id="preview_button" class="btn btn-secondary btn-block" onclick="preview(this)">Preview</button>
       </div>
-    </div>
+    </div> 
   </div>
 </div>

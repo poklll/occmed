@@ -22,8 +22,8 @@ class Element {
             <textarea  name="" class="form-control textarea-autosize" rows="1"></textarea>
             </div>`;
 
-        }
-        else
+        } 
+        else 
             if (type == "Choices") {
                 element = `<div class="form-group component_item" id="">
             <label for="" class="mb-1"></label>
@@ -31,7 +31,12 @@ class Element {
             <span aria-hidden="true">&times;</span>
             </button>
             <input type="text" id="component_name" class="form-control component_name" placeholder="Enter field name"></input>
-            <div class="choice_container></div>
+            <div class="choice_container">
+            <div class="choice">
+            <i class="fa fa-circle" aria-hidden="true"></i><input type="text" placeholder="add choice" onchange="choiceInput(this)"></input>
+            </div>
+            </div>
+          
             </div>`;
             }
             else {
@@ -51,6 +56,7 @@ class Element {
     render(name) {
         let item = $(this.draft);
         let temp = document.createElement('div');
+        let select = document.createElement('select');
         $(item).appendTo(temp);
         $(temp).find(".component_item").attr("id", name);
         $(temp).find(".component_item").addClass("render_item");
@@ -59,6 +65,10 @@ class Element {
         $(temp).find('label').text(name);
         $(temp).find('input').attr('name', name);
         $(temp).find('textarea').attr('name', name);
+        $(select).attr('name',name);
+        $(select).addClass('form-control');
+        $(select).appendTo($(temp).find('.choice_container'));
+        $(temp).find('.choice').remove();
         $(temp).find('#component_name').remove();
         $(temp).find('.close').remove();
         this.rendered = $(temp).html();

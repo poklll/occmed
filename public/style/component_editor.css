@@ -176,6 +176,15 @@ input {
     overflow-y: auto;
 }
 
+.choice > input{
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 40%;
+    margin-left: 10px;
+
+}
+
 @media only screen and (max-width: 500px) {
     #component_container {
         width: 80vw;
