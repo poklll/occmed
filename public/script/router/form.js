@@ -12,7 +12,7 @@ router.get('/form_editor', (req, res) => res.render('form_editor',{layout: '../l
 
 // Addcomponent
 router.post('/form_editor', (req, res) => {
-  const { sectionname,component,description,total } = req.body;
+  const { sectionname,form,description,total } = req.body;
   let errors = [];
 
   if (!sectionname || !description || !total ) {
@@ -29,14 +29,13 @@ router.post('/form_editor', (req, res) => {
      total
     });
   } else {
-    Section.findOne({ name: name }).then(section => {
+    Section.findOne({ sectionname: sectionname }).then(section => {
       if (section) {
         errors.push({ msg: 'Requirement is already exist' });
         res.render('form_editor', {
           layout: '../layouts/form_editor',
           errors,
           sectionname,
-          component,
           description,
           total
          });

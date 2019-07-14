@@ -9,8 +9,7 @@ const SectionSchema = new mongoose.Schema({
    type: Number,
    default: 0
  },
- form: String,
- value: [],
+ form: [],
  note: [String],
  comment: [String],
  status : {

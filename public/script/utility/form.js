@@ -1,7 +1,7 @@
 
 
 class Element {
-    draft
+    drafted
     rendered
     saved
     constructor(name, type, value) {
@@ -9,122 +9,109 @@ class Element {
         this.type = type;
         this.value = value;
     }
-    createprototype() {
+    draft() {
         let type = this.type;
         let element;
+        let template = document.createElement('div');
+        $(template).addClass('form-group component_item').html(`<label for="" class="mb-1"></label>
+        <button type="button" class="close" aria-label="Close" onclick="removeItem(this)"><span aria-hidden="true">&times;</span></button>
+        <input type="text" id="component_name" class="form-control component_name" placeholder="Enter field name"></input>`);
         if (type == "Long text") {
-            element = `<div class="form-group component_item" id="">
-            <label for="" class="mb-1"></label>
-            <button type="button" class="close" aria-label="Close" onclick="removeItem(this)">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            <input type="text" id="component_name" class="form-control component_name" placeholder="Enter field name"></input>
-            <textarea  name="" class="form-control textarea-autosize" rows="1"></textarea>
-            </div>`;
-
-        } 
-        else 
+            element = `<textarea  name="" class="form-control textarea-autosize" rows="1"></textarea>`;
+            $(element).appendTo(template);
+            addTabsupport();
+            autosize($('.textarea-autosize'));
+        }
+        else
             if (type == "Choices") {
-                element = `<div class="form-group component_item" id="">
-            <label for="" class="mb-1"></label>
-            <button type="button" class="close" aria-label="Close" onclick="removeItem(this)">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            <input type="text" id="component_name" class="form-control component_name" placeholder="Enter field name"></input>
-            <div class="choice_container">
-            <div class="choice">
-            <i class="fa fa-circle" aria-hidden="true"></i><input type="text" placeholder="add choice" onchange="choiceInput(this)"></input>
-            </div>
-            </div>
-          
-            </div>`;
+                element = `<div class="choice_container">
+                       <div class="choice">
+                       <i class="fa fa-circle" aria-hidden="true"></i><input type="text" placeholder="add choice" onchange="choiceInput(this)"></input>
+                       </div>
+                       </div>`;
+                $(element).appendTo(template);
             }
-            else {
-            element = `<div class="form-group component_item" id="">
-            <label for="" class="mb-1"></label>
-            <button type="button" class="close" aria-label="Close" onclick="removeItem(this)">
-            <span aria-hidden="true">&times;</span>
-            </button>
-            <input type="text" id="component_name" class="form-control component_name" placeholder="Enter field name"></input>
-            <input type="${type}" name="" class="form-control"></input>
-            </div>`;
-            }
-        this.draft = element;
-        return element;
+            else
+                if (type == "Images") {
+                    var gallery = new Gallery();
+                    $(gallery.element).appendTo(template);
+                    var add = $('<button id="add_image" class="btn btn-dark"></button>').appendTo(template);
+                    var fileinput = $('<input type="file"></input>').appendTo(template).css("display", "none");
+                    $(add).css('width', '100%');
+                    $(add).html(' <i class="fa fa-upload" aria-hidden="true"></i>');
+                    $(add).click(() => {
+                        fileinput.click();
+                    });
+                    $(fileinput).change(() => {
+                        var file = $(fileinput).prop("files")[0];
+                        var formData = new FormData();
+                        formData.append('photo', file);
+                        let xhr = new XMLHttpRequest();
+                        xhr.open("POST", "/upload");
+                        xhr.onload = function () {
+                            var imgpath = xhr.responseText;
+                            gallery.add("/image/"+imgpath);
+                        }
+                        xhr.send(formData);
+                    });
+                }
+                else {
+                    element = `<input type="${type}" name="" class="form-control"></input>`;
+                    $(element).appendTo(template);
+                }
+        this.drafted = template;
+        this.draftsetup();
+        return template;
     }
 
     render(name) {
-        let item = $(this.draft);
-        let temp = document.createElement('div');
+        let temp = $(this.drafted).clone();
         let select = document.createElement('select');
-        $(item).appendTo(temp);
-        $(temp).find(".component_item").attr("id", name);
-        $(temp).find(".component_item").addClass("render_item");
-        $(temp).find(".component_item").removeClass("component_item");
-        $(temp).find('label').attr('for', name);
-        $(temp).find('label').text(name);
+        $(temp).attr("id", name);
+        $(temp).addClass("render_item");
+        $(temp).removeClass("component_item");
+        $(temp).find('label').attr('for', name).text(name);
         $(temp).find('input').attr('name', name);
         $(temp).find('textarea').attr('name', name);
-        $(select).attr('name',name);
-        $(select).addClass('form-control');
-        $(select).appendTo($(temp).find('.choice_container'));
+        $(select).attr('name', name).addClass('form-control').appendTo($(temp).find('.choice_container'));
         $(temp).find('.choice').remove();
         $(temp).find('#component_name').remove();
         $(temp).find('.close').remove();
-        this.rendered = $(temp).html();
+        this.rendered = temp;
 
     }
     load() {
-        let temp = document.createElement('div');
-        $(this.rendered).appendTo(temp);
-        $(temp).find('input').val(this.value);
-        $(temp).find('textarea').val(this.value);
-        return $(temp).html();
+        $(this.rendered).find('input').val(this.value);
+        $(this.rendered).find('textarea').val(this.value);
+        return this.rendered;
     }
     draftTo(target) {
-        this.createprototype();
-        el = this;
-        let temp = document.createElement('div');
-        $(this.draft).appendTo(temp);
-        $(temp).find('#component_name').on('change'
-            , function () {
-                    $(this).css("font-weight", "bold");
-                    $(this).blur();
-                    el.name = $(this).val();
-                    el.render($(this).val());
-                    $(temp).addClass("draft");
-                    $(temp).attr('data-name', el.name);
-                    $(temp).attr('data-type', el.type);
-                    $(temp).attr('data-render', el.rendered);
-            }
-        );
-        $(temp).find('#component_name').on('keydown'
-            , function () {
-                $(this).css("font-weight", "normal");
-            }
-        );
-        $(temp).appendTo(target);
-        $(temp).find("#component_name").focus();
-
+        this.draft();
+        $(this.drafted).appendTo(target);
+        $(this.drafted).find("#component_name").focus();
     }
-    addTo(target){
-        el = this;
-        let temp = document.createElement('div');
-        $(this.rendered).appendTo(temp);
-        $(temp).find('form-control').on('change'
-        , function () {
-        
+    draftsetup() {
+        var el = this;
+        $(this.drafted).find('#component_name').on('change'
+            , function () {
                 $(this).css("font-weight", "bold");
                 $(this).blur();
                 el.name = $(this).val();
                 el.render($(this).val());
-                $(temp).addClass("draft");
-                $(temp).attr('data-name', el.name);
-                $(temp).attr('data-type', el.type);
+                $(el.drafted).addClass("draft");
+                $(el.drafted).attr('data-name', el.name);
+                $(el.drafted).attr('data-type', el.type);
+                $(el.drafted).attr('data-render', $(el.rendered).prop('outerHTML'));
+            }
+        );
+        $(this.drafted).find('#component_name').on('keydown'
+            , function () {
+                $(this).css("font-weight", "normal");
+            }
+        );
 
-        }
-    );
     }
+
 }
 
 
@@ -135,14 +122,7 @@ class Form {
         this.name = name;
     }
     saveEditor(editor) {
-        $(editor).find(".draft").each((index, value) => {
-            this.editor = [];
-            let name = $(value).attr('data-name');
-            let type = $(value).attr('data-type');
-            let el = new Element(name,type);
-            el.createprototype();
-
-        });
+        this.editor = $(editor).html();
     }
     save(editor) {
         this.rendered = $(editor).html();

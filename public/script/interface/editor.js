@@ -1,11 +1,10 @@
 let saved = false;
+let currentForm = new Form();
 
 function addItem(type) {
     el = new Element();
     el.type = type;
     el.draftTo('#component_container');
-    autosize($('.textarea-autosize'));
-    addTabsupport();
     window.scrollTo(0, document.body.scrollHeight);
 }
 
@@ -21,12 +20,12 @@ function addChoice(el){
 
 function choiceInput(el){
     let choices = $(el).parent().parent();
-    let html = $(el).parent().parent().parent().parent().attr('data-render');
+    let html = $(el).parent().parent().parent().attr('data-render');
     let temp = document.createElement('div');
     $(html).appendTo(temp);
     if($(el).val()==""){
         if($(el).parent().children().length > 1){
-            removeChoice(el);
+            removeItem(el);
         }
     }
     else
@@ -43,7 +42,7 @@ function choiceInput(el){
                 $(option).text(choice);
                 $(temp).find('select').append(option);
                 html = $(temp).html();
-                $(choices).parent().parent().attr('data-render-with-choices',html);
+                $(choices).parent().attr('data-render-with-choices',html);
             } 
     });
 }
@@ -58,13 +57,7 @@ function preview(el) {
         $('#render_container').show();
         $('#add_button').hide();
         $('.draft').each((index, value) => {
-            if($(value).attr("data-name") == undefined || ""){
-                 let error = new message("Please enter all field name","danger");
-                 error.pushTo('#message_container');
-                 return
-            }
-            else
-            {   let html;
+                let html;
                 let choices = $(value).attr("data-render-with-choices");
                 if(choices)
                 {
@@ -76,7 +69,7 @@ function preview(el) {
                 }
                 $(html).appendTo('#render_container');
             }
-        });
+        );
 
         var status = saved ? 'badge badge-succcess' : 'badge badge-secondary';
         $("#status").addClass(status);
@@ -97,10 +90,10 @@ function preview(el) {
 
 
 function removeItem(el) {
-    $(el).parent().parent().remove();
-}
-
-function removeChoice(el) {
     $(el).parent().remove();
 }
 
+function load()
+{
+
+}
