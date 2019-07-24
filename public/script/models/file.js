@@ -4,7 +4,9 @@ const moment = require('moment');
 const fileSchema = new mongoose.Schema({
   filename: String,
   originalname: String,
+  filetype: String,
   path: String,
+  userid: String,
   date: {
       type: String,
       default: moment().format('lll')

@@ -1,6 +1,14 @@
 
-
-
+ <div id="form_list" class="d-flex justify-content-center">
+  <i class="fa fa-list-ul" aria-hidden="true"></i>
+  <div class="list-group">
+      <% if(typeof requirements != 'undefined'){ %> <% requirements.forEach(function(requirement) { %>
+        <a href="/form_editor/<%= requirement %>" class="list-group-item list-group-item-action "><%= requirement %></a>
+        <% }); %> <% } %>
+  </div>
+</div>
+<div class="header"></div>
+<div class="container" style="height:auto; min-height: 100vh; width: 100vw;">
 <div class="row mt-5 mb-5">
   <div class="col-md-10 col-sm-15">
     <div class="card card-body" id="submit_form">
@@ -24,6 +32,7 @@
           <input type="number" id="total" name="total" class="form-control"
             value="<%= typeof total != 'undefined' ? total : 1 %>" />
         </div>
+           <input id="form" type="hidden" name="form">
         <button type="submit" class="btn btn-primary btn-block">
           Submit
         </button>
@@ -59,10 +68,13 @@
         </div>
         </div>
         <hr>
-        <button id="save_button" class="btn btn-success btn-block" onclick="">Save</button>
+        <button id="save_button" class="btn btn-success btn-block" onclick="save()">Save</button>
         <button id="preview_button" class="btn btn-secondary btn-block" onclick="preview(this)">Preview</button>
       </div>
     </div> 
   </div>
 </div>
 
+<span id="elements" data-elements="<%= typeof form != 'undefined' ? JSON.stringify(form) : '' %>" hidden></span>
+
+</div>

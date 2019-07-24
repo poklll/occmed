@@ -33,10 +33,6 @@ app.set('view engine', 'ejs');
 // Express body parser
 app.use(express.urlencoded({ extended: true }));
 
-//Multer
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
-app.use(file);
-
 // Express session
 app.use(
   session({
@@ -64,7 +60,8 @@ app.use(function(req, res, next) {
 //router
 app.use('/asset', express.static(path.join(__dirname, '/public/asset')));
 app.use('/public', express.static(path.join(__dirname, '/public')));
-
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+app.use(file);
 app.use(page);
 app.use(register);
 app.use(login);

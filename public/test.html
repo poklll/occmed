@@ -21,24 +21,38 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/public/style/gallery.css">
+    <link rel="stylesheet" href="/public/style/component_editor.css">
 </head>
 
 <body>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="photo" />
-        <button onclick="send()" class="btn btn-success">Submit</button>
-    </form>
+    <div id="form" class="w-50">
+        <button onclick="test()" class="btn btn-success">Test</button>
+        <button onclick="save()" class="btn btn-info">Save</button>
+    </div>
     <img id="testimg" src="" alt="">
 </body>
+<script src="/public/script/utility/tabsupport.js"></script>
+<script src="/public/script/utility/autosize.js"></script>
+<script src="/public/script/utility/form.js"></script>
+<script src="/public/script/utility/gallery.js"></script>
 <script>
-    function send() {
-        req = new XMLHttpRequest();
-        req.open("POST", '/upload', true);
-        req.send();
-        req.onload = function () {
-            json = JSON.parse(req.responseText);
-            $('testimg').attr('src', JSON.stringify(json));
-        };
+    var components = [
+      {name:"First name",type:"text",value:"John"},
+      {name:"Last name",type:"text",value:"Wick"},
+      {name:"Age",type:"number",value:34},
+      {name:"Date of birth",type:"date",value:"1990-04-09"},
+      {name:"Occupation",type:"Choices",value:"Killer",choices:["Killer","Doctor","Tinker"]},
+      {name:"File",type:"File"},
+      {name:"Image",type:"Images"},
+    ];
+    var form = new Form();
+    form.components = components;
+    function test() {
+          form.load('#form');
+    }
+    function save() {
+          form.save('#form');
     }
 </script>
 

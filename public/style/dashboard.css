@@ -222,6 +222,7 @@ footer p {
 }
 #logout-button :hover{
       width: inherit;
+      
 }
 
 #logout-button > p{

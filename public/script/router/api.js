@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const flash = require('connect-flash');
 const app = express();
-const Sections = require('../models/section');
+const Sections = [];
 const { ensureAuthenticated} = require('../config/auth');
 
 app.use(flash());
@@ -15,7 +15,6 @@ router.get('/:section',(req,res)=>{
            res.send(section);
       }
    });
- 
 });
 //item
 router.get('/:section/:item',(req,res)=>{

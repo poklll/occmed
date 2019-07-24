@@ -51,9 +51,9 @@ input {
 }
 .render_item {
     padding: 10px;
-    border-radius: 20px;
     width: 100%;
     text-align: left;
+    background-color: white !important;
 }
 
 .card {
@@ -136,7 +136,7 @@ input {
    transition: width 1s;
    align-items: center;
    margin-top: 50vh;
-   margin-left: -40px;
+   align-self: flex-start;
    box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);
    position: fixed;
    z-index: 2;
@@ -146,7 +146,6 @@ input {
     height: auto;
     max-height: 100vh;
     width: 300px;
-    margin-left: 0;
     align-items: flex-start;
     background-color: gainsboro;
     margin-top: 0;

@@ -12,6 +12,17 @@ app.use(flash());
 // Register Page
 router.get('/register', (req, res) => res.render('register'));
 
+//account verification
+router.get('/verify/:id', (req,res)=>{
+       User.findById(req.params.id).then(user =>{
+             user.activated = true;
+             user.save().catch(err => console.log(err));
+       });
+       req.flash('success_msg', 'Your account is verified');
+       res.redirect('/login');
+
+});
+
 // Register
 router.post('/register', (req, res) => {
     const { firstname,lastname, email, password, password2 ,position,authlevel } = req.body;
@@ -69,10 +80,12 @@ router.post('/register', (req, res) => {
               newUser
                 .save()
                 .then( () => {
-                  mailer.send(newUser.email,'verify your email','hello world');
+                  mailer.send(newUser.email,
+                    'Verify your email',
+                    `<h1><a href="http://localhost:5000/verify/${newUser._id}">Click this link to activate your account</a></h1>`);
                   req.flash(
                     'success_msg',
-                    'You are now registered and can log in'
+                    'You are now registered'
                   );
                   res.redirect('/login');
                 })

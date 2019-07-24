@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const Requirement = require('../models/requirement');
-
 const UserSchema = new mongoose.Schema({
   firstname: {
     type: String,
@@ -34,7 +32,8 @@ const UserSchema = new mongoose.Schema({
   activated: {
     type: Boolean,
     default: false
-  }
+  },
+  requirements: []
 });
 
 const User = mongoose.model('User', UserSchema);

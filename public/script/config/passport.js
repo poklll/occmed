@@ -16,7 +16,7 @@ module.exports = function(passport) {
         }
         if(!user.activated)
         {
-          return done(null, false, { message: 'Your account is not activated yet' });
+          return done(null, false, { message: 'Please verify your account via email' });
         }
         // Match password
         bcrypt.compare(password, user.password, (err, isMatch) => {

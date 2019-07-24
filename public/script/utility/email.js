@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
             from: 'OCCMEDKKU<pok.trbk@gmail.com>',                // sender
             to: target ,                // list of receivers
             subject: subject,              // Mail subject
-            text: message  // HTML body
+            html: message  // HTML body
           };
         
           transporter.sendMail(mailOptions, function (err, info) {
