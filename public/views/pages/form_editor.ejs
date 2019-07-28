@@ -1,14 +1,58 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">จัดการฟอร์ม</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
- <div id="form_list" class="d-flex justify-content-center">
-  <i class="fa fa-list-ul" aria-hidden="true"></i>
-  <div class="list-group">
-      <% if(typeof requirements != 'undefined'){ %> <% requirements.forEach(function(requirement) { %>
-        <a href="/form_editor/<%= requirement %>" class="list-group-item list-group-item-action "><%= requirement %></a>
-        <% }); %> <% } %>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto nav-desktop">
+      <li class="nav-item active">
+        <div class="flip">
+            <div class="front">
+                <a class="nav-link" href="#"><i class="fa fa-list-ul" aria-hidden="true"></i></a><span class="sr-only">(current)</span></a>
+              </div>
+              <div class="back">
+                  <a href="/login"><p>ฟอร์มทั้งหมด</p></a>
+              </div>
+        </div>
+      </li>
+      <li class="nav-item active">
+          <div class="flip">
+              <div class="front">
+                  <a class="nav-link" href="#"><i class="fa fa-user" aria-hidden="true"></i></a><span class="sr-only">(current)</span></a>
+                </div>
+                <div class="back">
+                    <p>ผู้ใช้งาน</p>
+                </div>
+          </div>
+        </li>
+      <li class="nav-item active">
+          <div class="flip">
+              <div class="front">
+                  <a class="nav-link" href="#"><i class="fas fa-qrcode    "></i></a><span class="sr-only">(current)</span></a>
+                </div>
+                <div class="back">
+                    <p>QR code</p>
+                </div>
+          </div>
+        </li>
+    </ul>
   </div>
-</div>
-<div class="header"></div>
-<div class="container" style="height:auto; min-height: 100vh; width: 100vw;">
+</nav>
+
+
+ 
+
+<div class="header"><h1></h1></div>
+
+<div class="container" style="height:auto; width: 100vw;">
+    <div id="form_list" class="d-flex justify-content-center">
+        <div class="list-group">
+            <% if(typeof requirements != 'undefined'){ %> <% requirements.forEach(function(requirement) { %>
+              <a href="/form_editor/<%= requirement %>" class="list-group-item list-group-item-action "><%= requirement %></a>
+              <% }); %> <% } %>
+        </div>
+      </div>
 <div class="row mt-5 mb-5">
   <div class="col-md-10 col-sm-15">
     <div class="card card-body" id="submit_form">

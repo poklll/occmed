@@ -18,8 +18,9 @@
          let imgSrc = path;
          $(image).parent().css('background-image', 'url(' + imgSrc + ')');
          var imgc = $(image).parent();
+         $(imgc).height($(imgc).width());
          var del = $('<button id="del_image" class="btn btn-danger del-gl"></button>').appendTo(imgc);
-         $(del).css('width', '20%');
+         $(del).css('width', '30%');
          $(del).html('<i class="fa fa-trash" aria-hidden="true"></i>');
          $(del).click(()=>{
               $(imgc).remove();
@@ -48,6 +49,8 @@
           copy.insertAfter($(this)).height(h).width(w).delay(500).addClass("active");
           $(".active").css('top', y - 8);
           $(".active").css('left', x - 8);
+          $(copy).find('#del_image').remove();
+          var next = $('<div class="gal-nav"></dav>');
           $(copy).css('display','flex');
 
             setTimeout(function() {

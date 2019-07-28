@@ -10,7 +10,6 @@
  .img-c {
    object-fit: contain !important;
    width: 50%;
-   height: 200px;
    float: left;
    position: relative;
    overflow: hidden;

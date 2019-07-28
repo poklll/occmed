@@ -40,7 +40,7 @@ class Element {
                     $(gallery.element).appendTo(template);
                     var add = $('<button id="add_image" class="btn btn-dark"></button>').appendTo(template);
                     var fileinput = $('<input type="file" accept="image/*" multiple></input>').appendTo(template).css("display", "none");
-                    $(add).css('width', '70%');
+                    $(add).css('width', '100%');
                     $(add).html(' <i class="fa fa-upload" aria-hidden="true"></i>');
                     $(add).click(() => {
                         fileinput.click();
