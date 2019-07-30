@@ -1,124 +1,161 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">จัดการฟอร์ม</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+  <a class="navbar-brand" href="/form_editor">จัดการฟอร์ม</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto nav-desktop">
+    <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
         <div class="flip">
-            <div class="front">
-                <a class="nav-link" href="#"><i class="fa fa-list-ul" aria-hidden="true"></i></a><span class="sr-only">(current)</span></a>
-              </div>
-              <div class="back">
-                  <a href="/login"><p>ฟอร์มทั้งหมด</p></a>
-              </div>
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fas fa-edit    "></i></a><span
+              class="sr-only">(current)</span></a>
+          </div>
+          <div class="back">
+            <a href="#" onclick="showeditor()">
+              <p>แก้ไขฟอร์ม</p>
+            </a>
+          </div>
         </div>
       </li>
       <li class="nav-item active">
-          <div class="flip">
-              <div class="front">
-                  <a class="nav-link" href="#"><i class="fa fa-user" aria-hidden="true"></i></a><span class="sr-only">(current)</span></a>
-                </div>
-                <div class="back">
-                    <p>ผู้ใช้งาน</p>
-                </div>
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fa fa-user" aria-hidden="true"></i></a><span
+              class="sr-only">(current)</span></a>
           </div>
-        </li>
+          <div class="back">
+            <a href="#" onclick="showuser()">
+                <p>ผู้ใช้งาน</p>
+            </a>
+          </div>
+        </div>
+      </li>
       <li class="nav-item active">
-          <div class="flip">
-              <div class="front">
-                  <a class="nav-link" href="#"><i class="fas fa-qrcode    "></i></a><span class="sr-only">(current)</span></a>
-                </div>
-                <div class="back">
-                    <p>QR code</p>
-                </div>
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fas fa-qrcode    "></i></a><span class="sr-only">(current)</span></a>
           </div>
-        </li>
+          <div class="back">
+              <a href="#" onclick="showqr(`<%= typeof sectionname != 'undefined' ? sectionname : '' %>`)">
+                <p>QR code</p>
+              </a>
+          </div>
+        </div>
+      </li>
     </ul>
   </div>
 </nav>
 
 
- 
 
-<div class="header"><h1></h1></div>
 
-<div class="container" style="height:auto; width: 100vw;">
-    <div id="form_list" class="d-flex justify-content-center">
-        <div class="list-group">
-            <% if(typeof requirements != 'undefined'){ %> <% requirements.forEach(function(requirement) { %>
-              <a href="/form_editor/<%= requirement %>" class="list-group-item list-group-item-action "><%= requirement %></a>
-              <% }); %> <% } %>
-        </div>
+<div class="header">
+  <h1><%= typeof sectionname != 'undefined' ? sectionname : '' %></h1>
+</div>
+
+<div class="container slide-in-fwd-center" style="height:auto; width: 100vw;">
+  <div class="row mt-5 mb-5">
+    <div class="col-md-10 col-sm-15">
+      <div class="card card-body" id="submit_form">
+        <h1 class="text-center mb-3">
+          <i class="fa fa-cog" aria-hidden="true"></i> Requirement Editor
+        </h1>
+        <% include ./partials/messages %>
+        <form action="/form_editor" method="POST">
+          <div class="form-group">
+            <label for="sectionname">Name</label>
+            <input type="text" id="sectionname" name="sectionname" class="form-control" placeholder="Enter name"
+              value="<%= typeof sectionname != 'undefined' ? sectionname : '' %>" />
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" class="form-control" placeholder="Enter description"
+              value="<%= typeof description != 'undefined' ? description : '' %>" />
+          </div>
+          <div class="form-group">
+            <label for="total">Total requirement</label>
+            <input type="number" id="total" name="total" class="form-control"
+              value="<%= typeof total != 'undefined' ? total : 1 %>" />
+          </div>
+          <input id="form" type="hidden" name="form">
+          <button type="submit" class="btn btn-primary btn-block">
+            Submit
+          </button>
+        </form>
       </div>
-<div class="row mt-5 mb-5">
-  <div class="col-md-10 col-sm-15">
-    <div class="card card-body" id="submit_form">
-      <h1 class="text-center mb-3">
-        <i class="fa fa-cog" aria-hidden="true"></i> Requirement Editor
-      </h1>
-      <% include ./partials/messages %>
-      <form action="/form_editor" method="POST">
-        <div class="form-group">
-          <label for="sectionname">Name</label>
-          <input type="text" id="sectionname" name="sectionname" class="form-control" placeholder="Enter name"
-            value="<%= typeof sectionname != 'undefined' ? sectionname : '' %>" />
-        </div>
-        <div class="form-group">
-          <label for="description">Description</label>
-          <input type="text" id="description" name="description" class="form-control" placeholder="Enter description"
-            value="<%= typeof description != 'undefined' ? description : '' %>" />
-        </div>
-        <div class="form-group">
-          <label for="total">Total requirement</label>
-          <input type="number" id="total" name="total" class="form-control"
-            value="<%= typeof total != 'undefined' ? total : 1 %>" />
-        </div>
-           <input id="form" type="hidden" name="form">
-        <button type="submit" class="btn btn-primary btn-block">
-          Submit
-        </button>
-      </form>
     </div>
   </div>
-</div>
 
-<div class="mt-5">
-  <div class="row mt-5 mb-5">
-    <div class="col-md-12">
-      <div class="card card-body">
-        <h1 id="section_name" class="text-center mb-3">
-          <i class="fa fa-book" aria-hidden="true"></i> Form Editor
-        </h1>
-        <h3 class="ml-3"><span id="status" class="badge badge-secondary">UNSAVED</span></h3>
-        <hr>
-        <div id="message_container"></div>
-        <div id="component_container">
+  <div class="mt-5">
+    <div class="row mt-5 mb-5">
+      <div class="col-md-12">
+        <div class="card card-body">
+          <h1 id="section_name" class="text-center mb-3">
+            <i class="fa fa-book" aria-hidden="true"></i> Form Editor
+          </h1>
+          <h3 class="ml-3"><span id="status" class="badge badge-secondary">UNSAVED</span></h3>
+          <hr>
+          <div id="message_container"></div>
+          <div id="component_container">
+          </div>
+          <div id="render_container">
+          </div>
+          <div class="d-flex justify-content-center">
+            <div id="add_button" class="btn btn-success">
+              <i id="add_icon" class="fa fa-plus" aria-hidden="true"></i>
+              <i class="fa fa-font" aria-hidden="true" onclick="addItem('Text')"></i>
+              <i class="fas fa-align-justify" onclick="addItem('Long text')"></i>
+              <i class="fa fa-calculator" aria-hidden="true" onclick="addItem('Number')"></i>
+              <i class="fa fa-list" aria-hidden="true" onclick="addItem('Choices')"></i>
+              <i class="fas fa-calendar-alt" onclick="addItem('Date')"></i>
+              <i class="fas fa-image" onclick="addItem('Images')"></i>
+              <i class="fa fa-file" aria-hidden="true" onclick="addItem('File')"></i>
+            </div>
+          </div>
+          <hr>
+          <button id="save_button" class="btn btn-success btn-block" onclick="save()">Save</button>
+          <button id="preview_button" class="btn btn-secondary btn-block" onclick="preview(this)">Preview</button>
         </div>
-        <div id="render_container">
-        </div>
-        <div class="d-flex justify-content-center">
-        <div id="add_button" class="btn btn-success">
-          <i id="add_icon" class="fa fa-plus" aria-hidden="true"></i>
-          <i class="fa fa-font" aria-hidden="true" onclick="addItem('Text')"></i>
-          <i class="fas fa-align-justify" onclick="addItem('Long text')"></i>
-          <i class="fa fa-calculator" aria-hidden="true" onclick="addItem('Number')"></i>
-          <i class="fa fa-list" aria-hidden="true" onclick="addItem('Choices')"></i>
-          <i class="fas fa-calendar-alt" onclick="addItem('Date')"></i>
-          <i class="fas fa-image" onclick="addItem('Images')"></i>
-          <i class="fa fa-file" aria-hidden="true" onclick="addItem('File')"></i>
-        </div>
-        </div>
-        <hr>
-        <button id="save_button" class="btn btn-success btn-block" onclick="save()">Save</button>
-        <button id="preview_button" class="btn btn-secondary btn-block" onclick="preview(this)">Preview</button>
       </div>
-    </div> 
+    </div>
   </div>
+
+
+  <span id="elements" data-elements="<%= typeof form != 'undefined' ? JSON.stringify(form) : '' %>" hidden></span>
+
 </div>
 
-<span id="elements" data-elements="<%= typeof form != 'undefined' ? JSON.stringify(form) : '' %>" hidden></span>
 
+<div class="form-list" style="height:auto; width: 100vw;">
+  <div class="list-group">
+    <% if(typeof requirements != 'undefined'){ %> <% requirements.forEach(function(requirement) { %>
+    <div class="list-item">
+      <a href="/form/<%= requirement %>" class="list-group-item list-group-item-action "><%= requirement %></a>
+      <button class="btn btn-danger" onclick="deleteform('<%= requirement %>')"><i class="fa fa-trash" aria-hidden="true"></i></button>
+    </div>
+    <% }); %> <% } %>
+  </div>
+  <button class="btn btn-success" onclick="newForm()">New form</button>
+</div>
+
+<div class="user justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw;" >
+  <div class="list-group">
+    <% if(typeof users != 'undefined'){ %> <% users.forEach(function(user) { %>
+    <div class="list-item list-group-item list-group-item-action user-item">
+        <div class="cropper">
+            <img src="<%= user.image %>" alt="">
+         </div>
+       <p><%= user.firstname %> <%= user.lastname %></p>
+      <button class="btn btn-danger" onclick="deleteform('<%= user %>')"><i class="fa fa-trash" aria-hidden="true"></i></button>
+    </div>
+    <% }); %> <% } %>
+  </div>
+  <button class="btn btn-success" onclick="newForm()">New form</button>
+</div>
+
+<div class="qr justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw; padding: 30px;">
+   <img src="" alt="qr code" style="height: 400px; width: 400px;">
 </div>

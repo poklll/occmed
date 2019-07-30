@@ -25,7 +25,7 @@ router.get('/verify/:id', (req,res)=>{
 
 // Register
 router.post('/register', (req, res) => {
-    const { firstname,lastname, email, password, password2 ,position,authlevel } = req.body;
+    const { firstname,lastname, email, password, password2 ,position,authlevel,img } = req.body;
     let errors = [];
   
     if (!firstname || !lastname || !email || !password || !password2 || !position || !authlevel) {
@@ -70,6 +70,7 @@ router.post('/register', (req, res) => {
             password,
             position,
             authlevel,
+            image: img
           });
   
   

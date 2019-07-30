@@ -1,17 +1,41 @@
 let currentForm = new Form();
-$( ()=>{
-     var components = JSON.parse($("#elements").attr('data-elements')).elements;
-     currentForm.components = components;
-     currentForm.loadEditor('#component_container');
-     $('#render_container').hide();
+$(() => {
+    var elements = $("#elements").attr('data-elements');
+    if (elements) {
+        var components = JSON.parse(elements).elements;
+        console.log($("#elements").attr('data-elements'));
+        currentForm.components = components;
+        currentForm.loadEditor('#component_container');
+        $('#render_container').hide();
+        $(window).scrollTop(0);
+        $('.nav-item').each((index, value) => {
+            $(value).show();
+            $(value).toggleClass('slide-in-fwd-center');
+        });
     }
+    else {
+        $('.container').hide();
+        showlist();
+    }
+
+}
 )
+
+function newForm() {
+    setTimeout(() => {
+        $('.form-list').hide();
+        $('.container').show();
+        $('.container').toggleClass('slide-in-fwd-center');
+    }, 500);
+
+}
 
 function addItem(type) {
     var el = new Element();
     el.type = type;
     el.draftTo('#component_container');
     window.scrollTo(0, document.body.scrollHeight);
+
 }
 
 
@@ -24,8 +48,8 @@ function preview(el) {
         $('#add_button').hide();
         currentForm.components = [];
         currentForm.saveEditor('#component_container');
-        $('#form').val(JSON.stringify({components : currentForm.components}));
-        $("#status").attr('class','badge badge-success');
+        $('#form').val(JSON.stringify({ components: currentForm.components }));
+        $("#status").attr('class', 'badge badge-success');
         $("#status").text("SAVED");
         text = "Editor";
     }
@@ -46,17 +70,26 @@ function removeItem(el) {
     unsave();
 }
 
-function save()
-{
-        currentForm.components = [];
-        currentForm.saveEditor('#component_container');
-        $('#render_container').empty();
-        $('#form').val(JSON.stringify({components : currentForm.components}));
-        $("#status").attr('class','badge badge-success');
-        $("#status").text("SAVED");
+function save() {
+    currentForm.components = [];
+    currentForm.saveEditor('#component_container');
+    $('#render_container').empty();
+    $('#form').val(JSON.stringify({ components: currentForm.components }));
+    $("#status").attr('class', 'badge badge-success');
+    $("#status").text("SAVED");
 }
 
-function unsave(){
-    $("#status").attr('class','badge badge-secondary');
+function unsave() {
+    $("#status").attr('class', 'badge badge-secondary');
     $("#status").text("UNSAVED");
+}
+
+function deleteform(name) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "/form/" + name);
+    xhr.onload = function () {
+        alert(`${name} has been deleted`);
+        window.location.href = "/form_editor";
+    }
+    xhr.send();
 }

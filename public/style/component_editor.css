@@ -10,6 +10,10 @@ body {
     flex-direction: column;
 }
 
+p{
+    margin: 0;
+}
+
 h1 {
     font-size: 25px;
 }
@@ -33,9 +37,9 @@ input {
 }
 .header{
     padding: 10px;
-    background-color: #ccc;
+    background-color: dimgray;
     text-align: center;
-    color: white;
+    color:  white;
 }
 .container {
     display: flex;
@@ -138,19 +142,30 @@ input {
     color: gray;
 }
 
-#form_list {
-    position: fixed;
-    height: 100vh;
-    width: 0px;
-    background-color: gainsboro;
-    transition: width 1s;
-    box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);
+.form-list{
+    margin-top: 20px;
+    display: none;
 }
 
 .list-group {
-    width: 100%;
-    display: none;
+    width: 50%;
 }
+
+.list-group-item{
+    font-size: 20px;
+    height: 60px;
+}
+
+.list-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1px;
+}
+.list-item > button{
+    height: 60px;
+}
+
 .choice>input {
     margin-top: 5px;
     border-radius: 5px;
@@ -172,7 +187,12 @@ input {
     .flip{
         width: 100%;
     }
-
+    .list-group {
+        width: 100%;
+    }
+    .form-list{
+        margin-top: 0;
+    }
 }
 /* navbar*/
 
@@ -180,7 +200,7 @@ input {
     height: 80px;
 }
 .nav-item {
-   display: flex;
+   display: none;
    justify-content: center;
    align-items: center;
    text-align: center;
@@ -251,7 +271,6 @@ input {
     text-align: center;
     color: white;
     font-size: 30px;
-    width: inherit;
     background-size: cover !important;
     background-position: center !important;
     height: 80px;
@@ -264,7 +283,6 @@ input {
     align-items: center;
     text-align: center;
     color: white;
-    width: inherit;
     background-size: cover !important;
     background-position: center !important;
     background-color: gainsboro;
@@ -276,4 +294,44 @@ input {
     font-size: 0.9125rem;
     line-height: 160%;
     color: black;
+}
+
+
+.user {
+    margin-top: 30px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-item{
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+.cropper{
+    position: relative;
+    overflow: hidden;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: contain;
+    transition: 0.5s;
+}
+
+.cropper>img{
+    height: 70px;
+    width: 70px;
+    transition: 0.5s;
+}
+
+.cropper:hover{
+    height: 150px;
+    width: 150px;
+}
+
+.cropper>img:hover{
+    height: 150px;
+    width: 150px;
 }

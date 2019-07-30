@@ -358,12 +358,12 @@ class Form {
           let val
           if (type == "File") {
               if ($(value).find(tag).attr("data-value")) {
-                  val = JSON.parse($(value).find(tag).attr("data-value"));
+                  val = JSON.parse($(value).find(tag).attr("data-value")).value;
               }
           }
           else if (type == "Images") {
               if ($(value).find('.gallery').attr("data-value")) {
-                  val = JSON.parse($(value).find('.gallery').attr("data-value"));
+                  val = JSON.parse($(value).find('.gallery').attr("data-value")).value;
               }
           }
           else {
