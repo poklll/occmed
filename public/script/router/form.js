@@ -33,12 +33,14 @@ router.get('/form/:name',async function(req,res){
      Requirement.findOne({name: req.params.name}).then(form=>{
       res.render('form_editor', {
         layout: '../layouts/form_editor',
+        _id: form._id,
         sectionname: form.name,
         description: form.description,
         total: form.total,
         form: { elements: form.form },
         requirements: requirements,
-        users: users,
+        groups : form.group,
+        alluser: users
       });
      })
    }
@@ -59,6 +61,8 @@ router.delete('/form/:name',async function(req,res){
       console.log(err);
   }
 });
+
+
 
 // Addcomponent
 router.post('/form_editor', async function(req, res) {
@@ -109,15 +113,7 @@ try{
         newSection
           .save()
           .then(section => {
-            res.render('form_editor', {
-              layout: '../layouts/form_editor',
-              sectionname: sectionname,
-              description: description,
-              total: total,
-              form: { elements: JSON.parse(form).components },
-              requirements: requirements,
-              success_msg: 'Requirement is now registered'
-            });
+               res.redirect(`/form/${section.name}`)
           })
           .catch(err => console.log(err));
       }

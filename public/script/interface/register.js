@@ -1,39 +1,39 @@
-var currentimg;
+function readURL(event) {
+  var file = event.target.files[0];
+  var reader = new FileReader();
 
-function readURL(input) {
-          if(currentimg){
-            deleteimg(currentimg);
-          }
-          uploadimg($(input));
+  reader.onload = function () {
+    var image = reader.result;
+    $('#profileimg').attr('src', image);
   }
-  
-  function uploadimg(fileinput){
-    var files = $(fileinput).prop("files");
-    var formData = new FormData();
-    $.map(files, file => {
-        formData.append('file', file);
-    });
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "/upload");
-    xhr.onload = function () {
-        var imgpaths = JSON.parse(xhr.responseText).files;
-        imgpaths.forEach(img => {
-            currentimg = img.path;
-            $('#img').val(img.path);
-            $('#profileimg').attr('src', img.path);
-        });
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    alert("no file");
+  }
+}
+
+
+function uploadimg() {
+  var files = $('#profilepic').prop("files");
+  var formData = new FormData();
+  $.map(files, file => {
+    formData.append('file', file);
+  });
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", "/upload");
+  xhr.onload = function () {
+      var imgpaths = JSON.parse(xhr.responseText).files;
+      imgpaths.forEach(img => {
+        $('#img').val(img.path);
+      });
+      $('form').submit();
     }
-    xhr.send(formData);
-  }
+  xhr.send(formData);
+}
 
-  function deleteimg(path){
-    let xhr = new XMLHttpRequest();
-    xhr.open("DELETE",path);
-    xhr.onload = function () {
-          console.log('del img done');
-    }
-    xhr.send();
-
-  }
+function submitform() {
+  uploadimg();
+}
 
 

@@ -7,11 +7,10 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <li class="nav-item slide-in-fwd-center active">
         <div class="flip">
           <div class="front">
-            <a class="nav-link" href="#"><i class="fas fa-edit    "></i></a><span
-              class="sr-only">(current)</span></a>
+            <a class="nav-link" href="#"><i class="fas fa-edit    "></i></a><span class="sr-only">(current)</span></a>
           </div>
           <div class="back">
             <a href="#" onclick="showeditor()">
@@ -20,7 +19,7 @@
           </div>
         </div>
       </li>
-      <li class="nav-item active">
+      <li class="nav-item slide-in-fwd-center">
         <div class="flip">
           <div class="front">
             <a class="nav-link" href="#"><i class="fa fa-user" aria-hidden="true"></i></a><span
@@ -28,20 +27,20 @@
           </div>
           <div class="back">
             <a href="#" onclick="showuser()">
-                <p>ผู้ใช้งาน</p>
+              <p>ผู้ใช้งาน</p>
             </a>
           </div>
         </div>
       </li>
-      <li class="nav-item active">
+      <li class="nav-item slide-in-fwd-center">
         <div class="flip">
           <div class="front">
             <a class="nav-link" href="#"><i class="fas fa-qrcode    "></i></a><span class="sr-only">(current)</span></a>
           </div>
           <div class="back">
-              <a href="#" onclick="showqr(`<%= typeof sectionname != 'undefined' ? sectionname : '' %>`)">
-                <p>QR code</p>
-              </a>
+            <a href="#" onclick="showqr(`<%= typeof sectionname != 'undefined' ? sectionname : '' %>`)">
+              <p>QR code</p>
+            </a>
           </div>
         </div>
       </li>
@@ -65,6 +64,7 @@
         </h1>
         <% include ./partials/messages %>
         <form action="/form_editor" method="POST">
+          <input id="_id" type="hidden" name="_id" value="<%= typeof _id != 'undefined' ? _id : ''  %>">
           <div class="form-group">
             <label for="sectionname">Name</label>
             <input type="text" id="sectionname" name="sectionname" class="form-control" placeholder="Enter name"
@@ -89,7 +89,7 @@
     </div>
   </div>
 
-  <div class="mt-5">
+  <div>
     <div class="row mt-5 mb-5">
       <div class="col-md-12">
         <div class="card card-body">
@@ -103,16 +103,17 @@
           </div>
           <div id="render_container">
           </div>
-          <div class="d-flex justify-content-center">
+          <div title="เพิ่มช่องข้อมูล" class="d-flex justify-content-center">
             <div id="add_button" class="btn btn-success">
               <i id="add_icon" class="fa fa-plus" aria-hidden="true"></i>
-              <i class="fa fa-font" aria-hidden="true" onclick="addItem('Text')"></i>
-              <i class="fas fa-align-justify" onclick="addItem('Long text')"></i>
-              <i class="fa fa-calculator" aria-hidden="true" onclick="addItem('Number')"></i>
-              <i class="fa fa-list" aria-hidden="true" onclick="addItem('Choices')"></i>
-              <i class="fas fa-calendar-alt" onclick="addItem('Date')"></i>
-              <i class="fas fa-image" onclick="addItem('Images')"></i>
-              <i class="fa fa-file" aria-hidden="true" onclick="addItem('File')"></i>
+              <i title="ตัวอักษร" class="fa fa-font" aria-hidden="true" onclick="addItem('Text')"></i>
+              <i title="บทความ" class="fas fa-align-justify" onclick="addItem('Long text')"></i>
+              <i title="ตัวเลข" class="fa fa-calculator" aria-hidden="true" onclick="addItem('Number')"></i>
+              <i title="ตัวเลือก" class="fa fa-list" aria-hidden="true" onclick="addItem('Choices')"></i>
+              <i title="วันที่" class="fas fa-calendar-alt" onclick="addItem('Date')"></i>
+              <i title="รูปภาพ" class="fas fa-image" onclick="addItem('Images')"></i>
+              <i title="ไฟล์" class="fa fa-file" aria-hidden="true" onclick="addItem('File')"></i>
+              <i title="อาจารย์" class="fas fa-chalkboard-teacher    "></i>
             </div>
           </div>
           <hr>
@@ -134,28 +135,60 @@
     <% if(typeof requirements != 'undefined'){ %> <% requirements.forEach(function(requirement) { %>
     <div class="list-item">
       <a href="/form/<%= requirement %>" class="list-group-item list-group-item-action "><%= requirement %></a>
-      <button class="btn btn-danger" onclick="deleteform('<%= requirement %>')"><i class="fa fa-trash" aria-hidden="true"></i></button>
+      <button class="btn btn-danger" onclick="deleteform('<%= requirement %>')"><i class="fa fa-trash"
+          aria-hidden="true"></i></button>
     </div>
     <% }); %> <% } %>
   </div>
+  <hr>
   <button class="btn btn-success" onclick="newForm()">New form</button>
 </div>
 
-<div class="user justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw;" >
+<div class="user justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw;">
+  <div class="dropdown search" hidden>
+    <input type="text" name="searchbar" class="searchbar" data-toggle="dropdown" onkeyup="searchuser(this)"
+      placeholder="Search user by name..">
+    <ul id="searchlist" class="dropdown-menu" role="menu">
+      <% if(typeof alluser != 'undefined'){ %> <% alluser.forEach(function(user) { %>
+      <div class="list-group-item list-group-item-action searchitem" data-id="<%= user._id %>">
+        <%= user.firstname %> <%= user.lastname %>
+      </div>
+      <% }); %> <% } %>
+    </ul>
+  </div>
   <div class="list-group">
+    <% if(typeof groups != 'undefined'){ %> <% groups.forEach(function(group) { %>
+    <div class="list-item list-group-item list-group-item-action group" >
+      <div style="display: flex; justify-content: center; align-items: center;">
+          <i style="margin-right: 20px; display: none;" class="fa fa-times" aria-hidden="true"></i>
+          <p><%=group.name%></p>
+      </div>
+      <div style="display: flex;">
+          <label class="switch">
+              <input name="enable" value="true" type="checkbox">
+              <span></span>
+          </label>
+      </div>
+    </div>
+    <% }); %> <% }  %>
     <% if(typeof users != 'undefined'){ %> <% users.forEach(function(user) { %>
     <div class="list-item list-group-item list-group-item-action user-item">
-        <div class="cropper">
-            <img src="<%= user.image %>" alt="">
-         </div>
-       <p><%= user.firstname %> <%= user.lastname %></p>
-      <button class="btn btn-danger" onclick="deleteform('<%= user %>')"><i class="fa fa-trash" aria-hidden="true"></i></button>
+      <div class="cropper">
+        <img src="<%= user.image %>" alt="">
+      </div>
+      <p><%= user.firstname %> <%= user.lastname %></p>
+      <button class="btn btn-danger" onclick="deleteform('<%= user %>')"><i class="fa fa-trash"
+          aria-hidden="true"></i></button>
     </div>
     <% }); %> <% } %>
   </div>
-  <button class="btn btn-success" onclick="newForm()">New form</button>
+  <hr>
+  <button class="btn btn-secondary" onclick="addGroup()"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Add
+    Group</button>
+  <hr>
+  <button class="btn btn-success" onclick="saveUser()">Save</button>
 </div>
 
 <div class="qr justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw; padding: 30px;">
-   <img src="" alt="qr code" style="height: 400px; width: 400px;">
+  <img src="" alt="qr code" style="height: 400px; width: 400px; box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);">
 </div>

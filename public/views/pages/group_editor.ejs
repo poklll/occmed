@@ -1,0 +1,57 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="/form_editor">จัดการกลุ่ม</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item slide-in-fwd-center active">
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fas fa-edit    "></i></a><span class="sr-only">(current)</span></a>
+          </div>
+          <div class="back">
+            <a href="#" onclick="showeditor()">
+              <p>แก้ไขฟอร์ม</p>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item slide-in-fwd-center">
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fa fa-user" aria-hidden="true"></i></a><span
+              class="sr-only">(current)</span></a>
+          </div>
+          <div class="back">
+            <a href="#" onclick="showuser()">
+              <p>ผู้ใช้งาน</p>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item slide-in-fwd-center">
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fas fa-qrcode    "></i></a><span class="sr-only">(current)</span></a>
+          </div>
+          <div class="back">
+            <a href="#" onclick="showqr(`<%= typeof sectionname != 'undefined' ? sectionname : '' %>`)">
+              <p>QR code</p>
+            </a>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="header">
+  <h1><%= typeof sectionname != 'undefined' ? sectionname : '' %></h1>
+</div>
+
+<div class="list-group">
+  ul.list
+</div>

@@ -7,7 +7,7 @@ const form = require('./public/script/router/form');
 const login = require('./public/script/router/login');
 const register = require('./public/script/router/register');
 const file = require('./public/script/router/file');
-const api = require('./public/script/router/api');
+const user = require('./public/script/router/user');
 const DB = require('./public/script/config/keys');
 const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
@@ -66,7 +66,7 @@ app.use(page);
 app.use(register);
 app.use(login);
 app.use(form);
-app.use(api);
+app.use(user);
 
 
 

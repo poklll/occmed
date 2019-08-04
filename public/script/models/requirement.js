@@ -5,7 +5,7 @@ const RequirementSchema = new mongoose.Schema({
  description: String,
  total: Number,
  form: [],
- user:[],
+ group:[],
  date: {
    type: Date,
    default: Date.now

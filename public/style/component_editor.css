@@ -10,6 +10,9 @@ body {
     flex-direction: column;
 }
 
+label{
+    margin-bottom: 0;
+}
 p{
     margin: 0;
 }
@@ -154,6 +157,7 @@ input {
 .list-group-item{
     font-size: 20px;
     height: 60px;
+    box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);
 }
 
 .list-item{
@@ -174,26 +178,7 @@ input {
     margin-left: 10px;
 }
 
-@media only screen and (max-width: 800px) {
-    #component_container {
-        width: 80vw;
-    }
-    #render_container {
-        width: 80vw;
-    }
-    .navbar {
-        height: auto !important;
-    }
-    .flip{
-        width: 100%;
-    }
-    .list-group {
-        width: 100%;
-    }
-    .form-list{
-        margin-top: 0;
-    }
-}
+
 /* navbar*/
 
 .navbar {
@@ -205,11 +190,15 @@ input {
    align-items: center;
    text-align: center;
 }
-
+.home{
+    display: flex !important;
+}
 .nav-link{
     text-align: center;
 }
-
+.active{
+    background-color: gainsboro;
+}
 /*flip*/
 
 .flip {
@@ -334,4 +323,59 @@ input {
 .cropper>img:hover{
     height: 150px;
     width: 150px;
+}
+
+/* search bar */
+.searchbar{
+    width: 300px;
+    height: 50px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: 1px solid black;
+    text-align: center;
+    font-family: 'Kanit', sans-serif;
+}
+
+.dropdown-menu{
+    width:300px;
+    height: 100px;
+    overflow: auto;
+}
+
+.searchitem{
+   text-align: center;
+   cursor: pointer;
+   height: 35px;
+   padding: 2px;
+}
+
+@media only screen and (max-width: 800px) {
+    #component_container {
+        width: 80vw;
+    }
+    #render_container {
+        width: 80vw;
+    }
+    .navbar {
+        height: auto !important;
+    }
+    .flip{
+        width: 100%;
+    }
+    .list-group {
+        width: 100%;
+    }
+    .form-list{
+        margin-top: 0;
+    }
+    .user{
+        margin-top: 10px;
+    }
+    .searchbar{
+        margin-bottom: 10px;
+        width: 80vw;
+    }
+    .dropdown-menu{
+        width:80vw;
+    }
 }

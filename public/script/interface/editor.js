@@ -8,16 +8,21 @@ $(() => {
         currentForm.loadEditor('#component_container');
         $('#render_container').hide();
         $(window).scrollTop(0);
-        $('.nav-item').each((index, value) => {
-            $(value).show();
-            $(value).toggleClass('slide-in-fwd-center');
-        });
+        $('.nav-item').show();
+        
     }
     else {
         $('.container').hide();
+        $('.navbar-toggler').hide();
         showlist();
     }
-
+  $('.nav-item').click(async function(){
+      try{
+        $('.nav-item').removeClass('active');
+        $(this).addClass('active');
+      }
+      catch(err){console.log(err);}
+  });
 }
 )
 
@@ -92,4 +97,16 @@ function deleteform(name) {
         window.location.href = "/form_editor";
     }
     xhr.send();
+}
+
+function searchuser(input){
+    let filter = $(input).val().toUpperCase();
+    $('#searchlist').find('.searchitem').each((index,value)=>{
+        if($(value).text().toUpperCase().indexOf(filter)> -1){
+               $(value).show();
+        }
+        else{
+               $(value).hide();
+        }
+    })
 }

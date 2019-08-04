@@ -21,7 +21,8 @@ function showuser() {
 }
 
 function showqr(name) {
+
+      $('.qr').css('display', 'flex').find('img').attr('src', generateqr(name));
       $('.container').hide();
       $('.user').hide();
-      $('.qr').css('display', 'flex').find('img').attr('src', generateqr(name));
 }
