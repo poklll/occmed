@@ -1,11 +1,16 @@
 let currentForm = new Form();
+let currentEditor = '';
 $(() => {
-    var elements = $("#elements").attr('data-elements');
-    if (elements) {
-        var components = JSON.parse(elements).elements;
+    currentEditor = $('#editor_container');
+    var formdata = $("#elements").attr('data-elements');
+    if (formdata) {
+        var form = JSON.parse(formdata);
         console.log($("#elements").attr('data-elements'));
-        currentForm.components = components;
-        currentForm.loadEditor('#component_container');
+        currentForm.components = form.components;
+        currentForm.extensions = form.extensions;
+        currentForm.loadEditor('#editor_container');
+        $(currentEditor).sortable();
+        $(currentEditor ).disableSelection();
         $('#render_container').hide();
         $(window).scrollTop(0);
         $('.nav-item').show();
@@ -30,36 +35,49 @@ function newForm() {
     setTimeout(() => {
         $('.form-list').hide();
         $('.container').show();
+        $('#render_container').hide();
         $('.container').toggleClass('slide-in-fwd-center');
     }, 500);
 
 }
 
-function addItem(type) {
-    var el = new Element();
-    el.type = type;
-    el.draftTo('#component_container');
-    window.scrollTo(0, document.body.scrollHeight);
+function deleteform(name) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("DELETE", "/form/" + name);
+    xhr.onload = function () {
+        alert(`${name} has been deleted`);
+        window.location.href = "/form_editor";
+    }
+    xhr.send();
+}
 
+
+async function selectEditor(el){
+      event.stopPropagation();
+      currentEditor = $(el);
+      await $('.selected').removeClass('selected');
+      $(el).addClass('selected');
 }
 
 
 function preview(el) {
     let text = $(el).text();
-    currentForm.components = [];
     if (text == "Preview") {
-        $('#component_container').hide();
+        $('#editor_container').hide();
         $('#render_container').show();
         $('#add_button').hide();
         currentForm.components = [];
-        currentForm.saveEditor('#component_container');
-        $('#form').val(JSON.stringify({ components: currentForm.components }));
+        currentForm.extensions = [];
+        currentForm.saveEditorTo('#editor_container','#render_container');
+        $('.element_container').css('border','0');
+        $('#form').val(JSON.stringify({ components: currentForm.components,extensions: currentForm.extensions }));
         $("#status").attr('class', 'badge badge-success');
         $("#status").text("SAVED");
         text = "Editor";
     }
     else {
-        $('#component_container').show();
+        $('#editor_container').show();
+        $('.element_container').css('border','0.5px dashed black');
         $('#render_container').empty();
         $('#render_container').hide();
         $('#add_button').show();
@@ -77,36 +95,26 @@ function removeItem(el) {
 
 function save() {
     currentForm.components = [];
-    currentForm.saveEditor('#component_container');
+    currentForm.extensions = [];
+    currentForm.saveEditor('#editor_container');
     $('#render_container').empty();
-    $('#form').val(JSON.stringify({ components: currentForm.components }));
+    $('#form').val(JSON.stringify({ components: currentForm.components , extensions: currentForm.extensions }));
     $("#status").attr('class', 'badge badge-success');
     $("#status").text("SAVED");
 }
+
+
+
+function addItem(type) {
+    var el = new Element();
+    el.type = type;
+    el.draftTo(currentEditor);
+}
+
 
 function unsave() {
     $("#status").attr('class', 'badge badge-secondary');
     $("#status").text("UNSAVED");
 }
 
-function deleteform(name) {
-    let xhr = new XMLHttpRequest();
-    xhr.open("DELETE", "/form/" + name);
-    xhr.onload = function () {
-        alert(`${name} has been deleted`);
-        window.location.href = "/form_editor";
-    }
-    xhr.send();
-}
 
-function searchuser(input){
-    let filter = $(input).val().toUpperCase();
-    $('#searchlist').find('.searchitem').each((index,value)=>{
-        if($(value).text().toUpperCase().indexOf(filter)> -1){
-               $(value).show();
-        }
-        else{
-               $(value).hide();
-        }
-    })
-}

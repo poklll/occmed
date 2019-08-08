@@ -4,6 +4,7 @@ const formSchema = new mongoose.Schema({
  sectionname: String,
  completed: Boolean,
  components: [],
+ extension: [],
  note: [String],
  comment: [String],
  advisor: String ,

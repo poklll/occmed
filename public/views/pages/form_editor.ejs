@@ -91,7 +91,7 @@
 
   <div>
     <div class="row mt-5 mb-5">
-      <div class="col-md-12">
+      <div id="form_editor" class="col-md-12">
         <div class="card card-body">
           <h1 id="section_name" class="text-center mb-3">
             <i class="fa fa-book" aria-hidden="true"></i> Form Editor
@@ -99,9 +99,9 @@
           <h3 class="ml-3"><span id="status" class="badge badge-secondary">UNSAVED</span></h3>
           <hr>
           <div id="message_container"></div>
-          <div id="component_container">
+          <div id="editor_container" class="element_container" onclick="selectEditor(this)">
           </div>
-          <div id="render_container">
+          <div id="render_container" class="element_container">
           </div>
           <div title="เพิ่มช่องข้อมูล" class="d-flex justify-content-center">
             <div id="add_button" class="btn btn-success">
@@ -113,7 +113,8 @@
               <i title="วันที่" class="fas fa-calendar-alt" onclick="addItem('Date')"></i>
               <i title="รูปภาพ" class="fas fa-image" onclick="addItem('Images')"></i>
               <i title="ไฟล์" class="fa fa-file" aria-hidden="true" onclick="addItem('File')"></i>
-              <i title="อาจารย์" class="fas fa-chalkboard-teacher    "></i>
+              <i title="อาจารย์" class="fas fa-chalkboard-teacher" onclick="addItem('Instructor')"></i>
+              <i title="ส่วนขยาย" class="fa fa-folder-plus" aria-hidden="true" onclick="addItem('Extension')"></i>
             </div>
           </div>
           <hr>

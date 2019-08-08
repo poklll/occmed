@@ -8,8 +8,9 @@ router.get('/group_editor',async function(req,res){
 });
 
 
-router.get('/user/:id',async function(req,res){
-     
+router.get('/instructor',async function(req,res){
+     var instructors = await userquery.filter('position','Professor');
+     res.send(JSON.stringify(instructors)); 
 });
 
 module.exports = router;

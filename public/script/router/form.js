@@ -29,6 +29,7 @@ router.get('/form_editor', async function (req, res) {
 router.get('/form/:name',async function(req,res){
    try{ 
      var requirements = await RequiremntQuery.all();
+     var instructors = await UserQuery.filter('position','Professor');
      var users = await UserQuery.all();
      Requirement.findOne({name: req.params.name}).then(form=>{
       res.render('form_editor', {
@@ -37,8 +38,9 @@ router.get('/form/:name',async function(req,res){
         sectionname: form.name,
         description: form.description,
         total: form.total,
-        form: { elements: form.form },
+        form: { components: form.form , extensions: form.extension },
         requirements: requirements,
+        instructors: instructors,
         groups : form.group,
         alluser: users
       });
@@ -92,6 +94,7 @@ try{
         section.description = description;
         section.total = total;
         section.form = JSON.parse(form).components;
+        section.extension = JSON.parse(form).extensions;
         section.save();
         res.render('form_editor', {
           layout: '../layouts/form_editor',
@@ -100,7 +103,7 @@ try{
           description,
           total,
           requirements: requirements,
-          form: { elements: JSON.parse(form).components },
+          form: {components: section.form , extensions: section.extension},
           success_msg: 'Requirement has been edited'
         });
       } else {
@@ -109,6 +112,7 @@ try{
           description: description,
           total: total,
           form: JSON.parse(form).components,
+          extension: JSON.parse(form).extensions
         });
         newSection
           .save()
