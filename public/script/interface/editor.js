@@ -9,7 +9,7 @@ $(() => {
         currentForm.components = form.components;
         currentForm.extensions = form.extensions;
         currentForm.loadEditor('#editor_container');
-        $(currentEditor).sortable();
+       // $(currentEditor).sortable();
         //$(currentEditor ).disableSelection();
         $('#render_container').hide();
         $(window).scrollTop(0);
