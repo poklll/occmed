@@ -72,8 +72,9 @@ class Element {
                         $(element).appendTo(template);
                     }
                     else if (type == "Instructor") {
-                        element = `<select class="from-control"></select>`;
+                        element = `<select class="from-control" onfocus="this.selectedIndex = -1;"></select>`;
                         var select = $(element).appendTo(template);
+                        var container = $('<div></div>').appendTo(template);
                         let xhr = new XMLHttpRequest();
                         xhr.open("GET", "/instructor");
                         xhr.onload = function () {
@@ -87,6 +88,14 @@ class Element {
                             });
                         }
                         xhr.send();
+                        $(select).on("change",function(){
+                             var val = $(this).children('option:selected').text();
+                             var id = $(this).children('option:selected').val();
+                             var item = `<div class="instructor"><h2>${val}</h2>  
+                             <button type="button" class="close" aria-label="Close" onclick="removeItem(this)"><span aria-hidden="true">&times;</span></button>
+                             </div>`;
+                             $(item).appendTo(container);
+                        });
                     }
                     else {
                         element = `<input type="${type}" name="" class="form-control"></input>`;
@@ -235,6 +244,11 @@ class Element {
         }
 
         return input
+    }
+
+    addinstructor(el){
+        var instructor = $(el).children('option:selected').val();
+        alert(instructor);
     }
     create() {
         let type = this.type;

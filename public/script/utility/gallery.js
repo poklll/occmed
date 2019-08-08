@@ -19,20 +19,6 @@ class Gallery
        $(image).parent().css('background-image', 'url(' + imgSrc + ')');
        var imgc = $(image).parent();
        $(imgc).height($(imgc).width());
-       var del = $('<button id="del_image" class="btn btn-danger del-gl"></button>').appendTo(imgc);
-       $(del).css('width', '30%');
-       $(del).html('<i class="fa fa-trash" aria-hidden="true"></i>');
-       $(del).click(()=>{
-            $(imgc).remove();
-           alert(path);
-           let xhr = new XMLHttpRequest();
-                      xhr.open("DELETE",path);
-                      xhr.onload = function () {
-                            alert('image was removed');
-                      }
-                      xhr.send();
-
-       });
        this.refresh();
        return this.element;
      }
@@ -49,7 +35,6 @@ class Gallery
         copy.insertAfter($(this)).height(h).width(w).delay(500).addClass("active");
         $(".active").css('top', y - 8);
         $(".active").css('left', x - 8);
-        $(copy).find('#del_image').remove();
         var next = $('<div class="gal-nav"></dav>');
         $(copy).css('display','flex');
 
@@ -64,7 +49,7 @@ class Gallery
         copy.removeClass("positioned active").addClass("postactive");
         $(gal).find(".img-w").css("object-fit","cover");
         setTimeout(function() {
-          copy.remove();
+          $(copy).remove();
         }, 500)
       })
 

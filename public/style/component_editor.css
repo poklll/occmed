@@ -377,7 +377,22 @@ option{
     border: 2px solid #8EC5FC !important;
 }
 
-
+.instructor{
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 5px;
+   border-radius: 5px;
+   background-color: whitesmoke;
+   border: 1px solid black;
+   margin-top: 2px;
+}
+.instructor > h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    font-family: 'Kanit', sans-serif;
+}
 @media only screen and (max-width: 800px) {
     #form_editor{
         width: 90vw;
