@@ -484,7 +484,6 @@ class Form {
             ext.components = extension.components;
             ext.loadAsExtension(editor);
         });
-        sortable(editor);
     }
 
 }

@@ -1,34 +1,24 @@
-function sortable(container) {
-    $(container).children().each((index, value) => {
-        $(value).attr("draggable", "true");
-        $(value).on("drag", function (event) {
-            let id = index;
-            $(value).attr('id',id);
-            event.stopPropagation();
-            $.event.addProp('dataTransfer');
-            event.dataTransfer.setData("text", event.target.id);
-        });
-        $(value).on("dragover", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            $(value).css('background-color','cornflowerblue');
-        });
+var sort = false;
+function sortableEnable(container) {
+    $(container).sortable();
+    $(container).sortable("option", "disabled", false);
+    // ^^^ this is required otherwise re-enabling sortable will not work!
+    $(container).disableSelection();
+    return false;
+}
 
-        $(value).on("dragleave", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            $(value).css('background-color', 'rgba(238, 235, 235, 0.973)');
-        });
+function sortableDisable(container) {
+    $(container).sortable("disable");
+    return false;
+}
 
-        $(value).on("drop", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            $(value).css('background-color', 'rgba(238, 235, 235, 0.973)');
-            let data = event.dataTransfer.getData("text");
-            alert(data);
-          // $(`#${id}`).insertBefore($(value));
-            event.dataTransfer.clearData();
-        });
+function togglesort(button, container) {
+    if (sort) {
+        sortableDisable(container);
+        $(button).attr('class','btn btn-secondary');
+    } else {
+        sortableEnable(container);
+        $(button).attr('class','btn btn-success');
     }
-    )
+    sort = !sort;
 }
