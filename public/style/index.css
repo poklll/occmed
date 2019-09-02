@@ -38,8 +38,11 @@ body {
 
 .header h1 {
    font-size: 40px;
+   color: white;
 }
-
+h2{
+    color: white;
+}
 .login-portal {
     height: 260px;
     width: 30vw;

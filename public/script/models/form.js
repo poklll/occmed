@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
 const formSchema = new mongoose.Schema({
+ userid: String ,
  sectionname: String,
  completed: Boolean,
  components: [],
  extension: [],
  note: [String],
  comment: [String],
- advisor: String ,
+ instructorid: [String] ,
  status : {
      type: String,
      default: "ยังไม่ได้ทำ"

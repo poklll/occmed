@@ -33,7 +33,15 @@ function uploadimg() {
 }
 
 function submitform() {
-  uploadimg();
+  var files = $('#profilepic').prop("files");
+  if(files){
+    uploadimg();
+  }
+  else
+  {
+    $('#img').val("/public/asset/Network-Profile.png");
+    $('form').submit();
+  }
 }
 
 

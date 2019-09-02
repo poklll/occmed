@@ -79,7 +79,7 @@ class Element {
                         xhr.open("GET", "/instructor");
                         xhr.onload = function () {
                             var instructors = JSON.parse(xhr.responseText);
-                            instructors.map(instructor =>{
+                            instructors.map(instructor => {
                                 var option = document.createElement('option');
                                 $(option).val(instructor._id);
                                 $(option).text(instructor.firstname);
@@ -88,35 +88,26 @@ class Element {
                             });
                         }
                         xhr.send();
-                        $(select).on("change",function(){
-                             var val = $(this).children('option:selected').text();
-                             var id = $(this).children('option:selected').val();
-                             var item = `<div class="instructor"><h2>${val}</h2>  
+                        $(select).on("change", function () {
+                            var val = $(this).children('option:selected').text();
+                            var id = $(this).children('option:selected').val();
+                            var item = `<div class="instructor"><h2>${val}</h2>  
                              <button type="button" class="close" aria-label="Close" onclick="removeItem(this)"><span aria-hidden="true">&times;</span></button>
                              </div>`;
-                             $(item).appendTo(container);
+                            $(item).appendTo(container);
                         });
                     }
-                    else {
-                        element = `<input type="${type}" name="" class="form-control"></input>`;
-                        var input = $(element).appendTo(template);
-                        if (type == "File") {
-                            $(template).find('input').change(() => {
-                                var file = $(input).prop("files")[0];
-                                var formData = new FormData();
-                                formData.append('file', file);
-                                let xhr = new XMLHttpRequest();
-                                xhr.open("POST", "/upload");
-                                xhr.onload = function () {
-                                    var imgpaths = JSON.parse(xhr.responseText).paths;
-                                    imgpaths.forEach(imgpath => {
-                                        alert(imgpath + " was uploaded");
-                                    });
-                                }
-                                xhr.send(formData);
-                            });
+                    else
+                        if (type == "Date") {
+                            element = `<input type="text" name="" class="form-control"></input>`;
+                            var input = $(element).appendTo(template);
+                            $(input).datepicker();
+                            $(input).datepicker("option", "dateFormat", "dd/mm/yy");
                         }
-                    }
+                        else {
+                            element = `<input type="${type}" name="" class="form-control"></input>`;
+                            var input = $(element).appendTo(template);
+                        }
         this.drafted = template;
         this.draftsetup();
         return template;
@@ -141,8 +132,6 @@ class Element {
         $(this.drafted).attr('data-name', this.name);
         $(this.drafted).attr('data-type', this.type);
         this.rendered = temp;
-
-
     }
     loadTo(target) {
         this.draftTo(target);
@@ -158,10 +147,10 @@ class Element {
     }
     draftTo(target) {
         this.draft();
-        if(($(target).children('.extension').length > 0) && (this.type != 'Extension')){
+        if (($(target).children('.extension').length > 0) && (this.type != 'Extension')) {
             $(this.drafted).insertBefore($(target).children('.extension').first());
         }
-        else{
+        else {
             $(this.drafted).appendTo(target);
         }
         $(this.drafted).find("#component_name").focus();
@@ -198,7 +187,6 @@ class Element {
                 unsave();
             }
         );
-
     }
     addChoice(choice) {
         var container = $(this.drafted).find(".choice_container");
@@ -246,7 +234,7 @@ class Element {
         return input
     }
 
-    addinstructor(el){
+    addinstructor(el) {
         var instructor = $(el).children('option:selected').val();
         alert(instructor);
     }
@@ -285,6 +273,11 @@ class Element {
                     var el = this;
                     var add = $('<button id="add_image" class="btn btn-dark"></button>').appendTo(template);
                     var fileinput = $('<input type="file" accept="image/*" multiple></input>').appendTo(template).css("display", "none");
+                    var progressbar = `<div class="progress">
+                    <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                    </div>`;
+                    progressbar = $(progressbar).appendTo(template);
+                    $(progressbar).hide();
                     $(add).css('width', '100%');
                     $(add).html(' <i class="fa fa-upload" aria-hidden="true"></i>');
                     $(add).click(() => {
@@ -292,85 +285,139 @@ class Element {
                     });
                     $(fileinput).change(() => {
                         var files = $(fileinput).prop("files");
-                        var formData = new FormData();
                         $.map(files, file => {
-                            formData.append('file', file);
+                            var reader = new FileReader();
+                            reader.onload = function () {
+                                var image = reader.result;
+                                gallery.add(image, file.name);
+                            }
+                            if (file) {
+                                reader.readAsDataURL(file);
+                            } else {
+                                alert("no file");
+                            }
                         });
-                        let xhr = new XMLHttpRequest();
-                        xhr.open("POST", "/upload");
-                        xhr.onload = function () {
-                            var imgpaths = JSON.parse(xhr.responseText).files;
-                            imgpaths.forEach(img => {
-                                gallery.add(img.path);
-                                el.value.push(img.path);
-                                $(input).attr('data-value', JSON.stringify({ value: el.value }));
-                            });
-                        }
-                        xhr.send(formData);
                     });
-
                 }
-                else if (type == 'Instructor') {
-                    element = `<select  class="from-control"></select><div class`;
-                    var select = $(element).appendTo(template);
-                    let xhr = new XMLHttpRequest();
-                    xhr.open("GET", "/instructor");
-                    xhr.onload = function () {
-                        var instructors = JSON.parse(xhr.responseText);
-                        instructors.map(instructor =>{
-                            var option = document.createElement('option');
-                            $(option).val(instructor._id);
-                            $(option).text(instructor.firstname);
-                            $(option).appendTo(select);
-                            $(template).find('#component_name').val('อาจารย์ที่ปรึกษา').trigger("change");
+                else
+                    if (type == "Extension") {
+                        $(template).removeClass('render_item').addClass('extension');
+                        var del = `<button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>`;
+                        element = `<div class="element_container"></div>`;
+                        del = $(del).appendTo(template);
+                        $(element).appendTo(template);
+                        $(del).click(() => {
+                            $(del).parent().remove();
                         });
                     }
-                    xhr.send();
-
-                }
-                else {
-                    element = `<input type="${this.type}" name="${this.name}" class="form-control"></input>`;
-                    var input = $(element).appendTo(template);
-                    var el = this;
-                    if (type == "File") {
-                        if (this.value) {
-                            this.value.map(file => {
-                                $(`<a href="${file.path}">${file.name}</a>${file.date}<hr>`).appendTo(template);
-                            })
-                        }
-                        $(template).find('input').change(() => {
-                            var file = $(input).prop("files")[0];
-                            var formData = new FormData();
-                            formData.append('file', file);
+                    else
+                        if (type == 'Instructor') {
+                            element = `<select class="from-control" onfocus="this.selectedIndex = -1;"></select>`;
+                            var select = $(element).appendTo(template);
+                            var container = $('<div></div>').appendTo(template);
                             let xhr = new XMLHttpRequest();
-                            xhr.open("POST", "/upload");
+                            var el = this;
+                            xhr.open("GET", "/instructor");
                             xhr.onload = function () {
-                                var files = JSON.parse(xhr.responseText).files;
-                                files.forEach(file => {
-                                    alert(file.name + " was uploaded");
-                                    $(`<a href="${file.path}">${file.name}</a><p>${file.date}</p><hr>`).appendTo(template);
-                                    var val = { name: file.name, path: file.path, date: file.date };
-                                    el.value.push(val);
-                                    $(input).attr('data-value', JSON.stringify({ value: el.value }));
-
+                                var instructors = JSON.parse(xhr.responseText);
+                                instructors.map(instructor => {
+                                    var option = document.createElement('option');
+                                    $(option).val(instructor._id);
+                                    $(option).text(instructor.firstname);
+                                    $(option).appendTo(select);
+                                    $(template).find('#component_name').val('อาจารย์ที่ปรึกษา').trigger("change");
                                 });
                             }
-                            xhr.send(formData);
-                        });
+                            xhr.send();
+                            $(select).on("change", function () {
+                                var val = $(this).children('option:selected').text();
+                                var id = $(this).children('option:selected').val();
+                                if (!el.value.includes(id)) {
+                                    el.value.push(id);
+                                    var item = `<div class="instructor"><h2>${val}</h2></div>`;
+                                    var instructor = $(item).appendTo(container);
+                                    var button = `<button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>`;
+                                    var del = $(button).appendTo(instructor);
+                                    $(del).click(() => {
+                                        $(instructor).remove();
+                                        el.value = el.value.filter(val => {
+                                            return val != id;
+                                        });
+                                        $(select).attr('data-value', JSON.stringify(el.value));
+                                    });
+                                    $(select).attr('data-value', JSON.stringify(el.value));
+                                }
+                                else {
+                                    alert("อาจารย์ท่านนี้ถูกเลือกแล้ว");
+                                }
+                            });
 
-                    }
-                    else {
-                        $(input).val(this.value);
-                    }
-                }
+                        }
+                        else
+                            if (type == "date") {
+                                element = `<input type="text" name="" class="form-control"></input>`;
+                                var input = $(element).appendTo(template);
+                                $(input).datepicker();
+                                $(input).datepicker("option", "dateFormat", "dd/mm/yy");
+                                $(input).val(this.value);
+                            }
+                            else {
+                                var el = this;
+                                if (type == "File") {
+                                    element = `<input type="${this.type}" name="${this.name}" class="form-control" multiple></input>`;
+                                    var input = $(element).appendTo(template);
+                                    var filename = $('<p></p>').appendTo(template);
+                                    var progressbar = `<div class="progress">
+                                    <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                                    </div>`;
+                                    progressbar = $(progressbar).appendTo(template).hide();
+                                    if (this.value) {
+                                        this.value.map(file => {
+                                            var div = $(`<div></div>`).appendTo(template);
+                                            var item = $(`<a class="filelink" href="${file.path}">${file.name}</a>`).appendTo(div);
+                                            $("<hr>").insertAfter(item);
+                                            var del = `<button type="button" class="close" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span></button>`;
+                                            del = $(del).insertAfter(item);
+                                            $(del).click(() => {
+                                                event.stopPropagation();
+                                                var path = file.path;
+                                                var xhr = new XMLHttpRequest();
+                                                xhr.open("DELETE", path);
+                                                xhr.onload = function () {
+                                                    console.log(xhr.responseText);
+                                                    $(del).parent().remove();
+                                                };
+                                                xhr.send();
+                                            });
+                                        })
+
+                                    }
+                                    $(input).change(() => {
+                                        $(filename).html("");
+                                        var files = $(input).prop('files');
+                                        $.map(files, file => {
+                                            $(filename).html($(filename).html() + file.name + `<br>`);
+                                        });
+                                    });
+
+                                }
+                                else {
+                                    element = `<input type="${this.type}" name="${this.name}" class="form-control"></input>`;
+                                    var input = $(element).appendTo(template);
+                                    $(input).val(this.value);
+                                }
+                            }
         return template;
 
     }
 
     createTo(target) {
-        $(this.create()).appendTo(target);
+        var element = $(this.create()).appendTo(target);
         addTabsupport();
         autosize($('.textarea-autosize'));
+        return element;
     }
 
 }
@@ -427,6 +474,7 @@ class Form {
     }
     save(editor) {
         this.components = [];
+        this.extensions = [];
         $(editor).children('.render_item').each((index, value) => {
             let name = $(value).attr("data-name");
             let type = $(value).attr("data-type");
@@ -443,16 +491,114 @@ class Form {
             }
             let val
             if (type == "File") {
-                if ($(value).find(tag).attr("data-value")) {
-                    val = JSON.parse($(value).find(tag).attr("data-value")).value;
+                val = [];
+                $(value).find(".filelink").each((index, value) => {
+                    if ($(value).attr('href')) {
+                        val.push({ name: $(value).text(), path: $(value).attr('href') });
+                    }
+                });
+                var fileinput = $(value).find('input')[0];
+                var files = $(fileinput).prop("files");
+                if (files.length > 0) {
+                    var formData = new FormData();
+                    $.map(files, file => {
+                        formData.append('file', file);
+                    });
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/upload");
+                    $(value).find('.progress').show();
+                    xhr.upload.onprogress = function (e) {
+                        var percentComplete = Math.ceil((e.loaded / e.total) * 100);
+                        $(value).find("#progressbar").css("width", percentComplete + "%");
+                        if (percentComplete == 100) {
+                            setTimeout(() => {
+                                $(value).find("#progressbar").css("width", "0%");
+                                $(value).find(".progress").hide();
+                            }, 500);
+                        };
+                    };
+                    xhr.onload = async function () {
+                        var files = await JSON.parse(xhr.responseText).files;
+                        files.forEach(file => {
+                            val.push({ name: file.name, path: file.path });
+                            var div = $(`<div></div>`).appendTo(value);
+                            var item = $(`<a class="filelink" href="${file.path}">${file.name}</a>`).appendTo(div);
+                            $("<hr>").insertAfter(item);
+                            var del = `<button type="button" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>`;
+                            del = $(del).insertAfter(item);
+                            $(del).click(() => {
+                                event.stopPropagation();
+                                var path = file.path;
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("DELETE", path);
+                                xhr.onload = function () {
+                                    console.log(xhr.responseText);
+                                    $(del).parent().remove();
+                                };
+                                xhr.send();
+                            });
+                            $(fileinput).val('').trigger('change');
+
+                        });
+                    }
+                    xhr.send(formData);
                 }
             }
             else if (type == "Images") {
-                if ($(value).find('.gallery').attr("data-value")) {
-                    val = JSON.parse($(value).find('.gallery').attr("data-value")).value;
+                val = [];
+                var files = [];
+                $(value).find('img').each((index, value) => {
+
+                    if ($(value).attr('data-name') != "undefined") {
+                        files.push({ name: $(value).attr('data-name'), path: $(value).attr('src'), img: value });
+                    }
+                    else {
+                        val.push($(value).attr('src'));
+                    }
+
+                });
+                var formData = new FormData();
+                if (files.length > 0) {
+                    $.map(files, file => {
+                        formData.append('file', dataURItoBlob(file.path), file.name);
+                    });
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/upload", true);
+                    $(value).find('.progress').show();
+                    xhr.upload.onprogress = function (e) {
+                        var percentComplete = Math.ceil((e.loaded / e.total) * 100);
+                        $(value).find("#progressbar").css("width", percentComplete + "%");
+                        if (percentComplete == 100) {
+                            setTimeout(() => {
+                                $(value).find("#progressbar").css("width", "0%");
+                                $(value).find(".progress").hide();
+                            }, 500);
+                        };
+                    };
+                    xhr.onload = async function () {
+                        var imgpaths = await JSON.parse(xhr.responseText).files;
+                        imgpaths.forEach((img, index) => {
+                            val.push(img.path);
+                            $(files[index].img).attr('src', img.path);
+                            $(files[index].img).attr('data-name', "undefined");
+                            setTimeout(() => {
+                                $(files[index].img).css('opacity', '0.5');
+                            }, 200 * (index + 1));
+                            setTimeout(() => {
+                                $(files[index].img).css('opacity', '1');
+                            }, 300 * (index + 1));
+                        });
+                    }
+                    xhr.send(formData);
                 }
+
             }
-            else {
+            else if (type == "Instructor") {
+                if ($(value).find('select').attr("data-value")) {
+                    val = JSON.parse($(value).find('select').attr("data-value"));
+                }
+            } else {
                 val = $(value).find(tag).val();
             }
             $(value).find('option').each((index, value) => {
@@ -463,9 +609,19 @@ class Form {
             this.components.push({ name: name, type: type, choices: choices, value: val });
         }
         );
+        $(editor).children('.extension').each(async(index,value)=>{
+            var extension = new Form($(value).attr('data-name'));
+            extension.save($(value).find('.element_container')[0]);
+            this.extensions.push({name: extension.name , components: extension.components});
+        });
     }
-
-    loadAsExtension(editor) {
+    loadExtension(editor) {
+        var element = new Element(this.name, 'Extension');
+        var el = element.createTo(editor);
+        var container = $(el).children('.element_container');
+        this.load(container);
+    }
+    loadExtensionEditor(editor) {
         var element = new Element(this.name, 'Extension');
         element.loadTo(editor);
         var container = $(element.drafted).children('.element_container');
@@ -496,10 +652,29 @@ class Form {
         this.extensions.map(extension => {
             var ext = new Form(extension.name);
             ext.components = extension.components;
-            ext.loadAsExtension(editor);
+            ext.loadExtensionEditor(editor);
         });
     }
 
 }
 
 
+function dataURItoBlob(dataURI) {
+    // convert base64/URLEncoded data component to raw binary data held in a string
+    var byteString;
+    if (dataURI.split(',')[0].indexOf('base64') >= 0)
+        byteString = atob(dataURI.split(',')[1]);
+    else
+        byteString = unescape(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    // write the bytes of the string to a typed array
+    var ia = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ia], { type: mimeString });
+}

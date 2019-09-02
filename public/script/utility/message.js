@@ -14,9 +14,15 @@ class message{
         </button>
         </div>`;
         this.html = element;
+        return this.html
     }
     pushTo(target){
        $(this.html).appendTo(target);
     }
-
+    pushAfter(target){
+        $(this.html).insertAfter(target);
+    }
+    pushBefore(target){
+        $(this.html).insertBefore(target);
+    }
 }

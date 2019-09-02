@@ -1,4 +1,4 @@
-<% let i = 1; sections.forEach((section)=>{ %>
+<% let i = 1;if(typeof sections != 'undefined') { sections.forEach((section)=>{ %>
 <div class="section border-radius-all shadow-drop-br">
     <div class="card-body">
         <h4 class="card-title"><%=section.name %></h4>
@@ -8,4 +8,4 @@
         </div>
     </div>
 </div>
-<% i++; }); %>
+<% i++; }); %> <% } %>

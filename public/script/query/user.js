@@ -16,7 +16,8 @@ module.exports = {
   filter: (field, filter) => {
     return new Promise(resolve => {
       let list = [];
-      var find = JSON.parse(`{"${field}" : "${filter}"}`);
+      //var find = JSON.parse(`{"${field}" : {"$regex": "^"+"${filter}","$options":"i"}}`);
+      var find = JSON.parse(`{"${field}" : {"$regex": "^${filter}","$options":"i"}}`);
       User.find(find).then(users => {
         users.map(user => {
           list.push(user);

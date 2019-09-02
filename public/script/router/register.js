@@ -81,9 +81,9 @@ router.post('/register', (req, res) => {
               newUser
                 .save()
                 .then( () => {
-                  mailer.send(newUser.email,
+                 /* mailer.send(newUser.email,
                     'Verify your email',
-                    `<h1><a href="http://localhost:5000/verify/${newUser._id}">Click this link to activate your account</a></h1>`);
+                    `<h1><a href="http://localhost:5000/verify/${newUser._id}">Click this link to activate your account</a></h1>`); */
                   req.flash(
                     'success_msg',
                     'You are now registered'

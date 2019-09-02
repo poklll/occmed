@@ -1,10 +1,12 @@
+<script>const socket = io();</script>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="/form_editor">จัดการฟอร์ม</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-
+  <% if(typeof sectionname != 'undefined'){ %>
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item slide-in-fwd-center active">
@@ -46,6 +48,7 @@
       </li>
     </ul>
   </div>
+  <% } %>
 </nav>
 
 
@@ -54,6 +57,7 @@
 <div class="header">
   <h1><%= typeof sectionname != 'undefined' ? sectionname : '' %></h1>
 </div>
+<div class="messages"></div>
 
 <div class="container slide-in-fwd-center" style="height:auto; width: 100vw;">
   <div class="row mt-5 mb-5">
@@ -96,8 +100,8 @@
           <h1 id="section_name" class="text-center mb-3">
             <i class="fa fa-book" aria-hidden="true"></i> Form Editor
           </h1>
-          <h3 class="ml-3"><span id="status" class="badge badge-secondary">UNSAVED</span></h3>
-          <button title="จัดเรียง"class="btn btn-secondary" onclick="togglesort(this,'#editor_container')"><i class="fa fa-sort" aria-hidden="true"></i></button>
+          <h3 class="ml-3"><span id="status" class="badge badge-waening">UNSAVED</span></h3>
+          <button title="จัดเรียง"class="btn btn-outline-info" onclick="togglesort(this,'#editor_container')"><i class="fa fa-sort" aria-hidden="true"></i></button>
           <hr>
           <div id="message_container"></div>
           <div id="editor_container" class="element_container" onclick="selectEditor(this)">
@@ -120,12 +124,11 @@
           </div>
           <hr>
           <button id="save_button" class="btn btn-success btn-block" onclick="save()">Save</button>
-          <button id="preview_button" class="btn btn-secondary btn-block" onclick="preview(this)">Preview</button>
+          <button id="preview_button" class="btn btn-outline-primary btn-block" onclick="preview(this)">Preview</button>
         </div>
       </div>
     </div>
   </div>
-
 
   <span id="elements" data-elements="<%= typeof form != 'undefined' ? JSON.stringify(form) : '' %>" hidden></span>
 
@@ -133,12 +136,13 @@
 
 
 <div class="form-list" style="height:auto; width: 100vw;">
+  <input autocomplete="off" type="search"name="name" id="form-search" class="form-control"  placeholder="ค้นหาแบบฟอร์ม">
   <div class="list-group">
     <% if(typeof requirements != 'undefined'){ %> <% requirements.forEach(function(requirement) { %>
     <div class="list-item">
-      <a href="/form/<%= requirement %>" class="list-group-item list-group-item-action "><%= requirement %></a>
-      <button class="btn btn-danger" onclick="deleteform('<%= requirement %>')"><i class="fa fa-trash"
-          aria-hidden="true"></i></button>
+      <a href="/form/<%= requirement._id %>" class="list-group-item list-group-item-action "><%= requirement.name %>
+        <button class="btn btn-secondary" onclick="deleteform('<%= requirement._id %>')"><i class="fa fa-trash"
+        aria-hidden="true"></i></button></a>
     </div>
     <% }); %> <% } %>
   </div>
@@ -147,48 +151,50 @@
 </div>
 
 <div class="user justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw;">
-  <div class="dropdown search" hidden>
-    <input type="text" name="searchbar" class="searchbar" data-toggle="dropdown" onkeyup="searchuser(this)"
-      placeholder="Search user by name..">
-    <ul id="searchlist" class="dropdown-menu" role="menu">
-      <% if(typeof alluser != 'undefined'){ %> <% alluser.forEach(function(user) { %>
-      <div class="list-group-item list-group-item-action searchitem" data-id="<%= user._id %>">
-        <%= user.firstname %> <%= user.lastname %>
+  
+  <div id="users" class="list-group">
+      <input autocomplete="off" type="search"name="name" id="group-search" class="form-control"  placeholder="ค้นหากลุ่ม">
+      <div class="add-group">
+          <div id="result-list" class="scale-in-ver-top">
+              <table>
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">กลุ่มดังกล่าวไม่ได้ใช้แบบฟอร์มนี้ สามารถเพิ่มได้จากฐานข้อมูลด้านล่าง</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+              </table>
+              <table id="group-list"class="table table-hover table-light">
+                <thead class="thead-dark">
+                  <tr>
+                      <th scope="col"><i class="fa fa-graduation-cap" aria-hidden="true"></i> GROUP</th>
+                      <th scope="col"></th>
+                      <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
       </div>
-      <% }); %> <% } %>
-    </ul>
-  </div>
-  <div class="list-group">
     <% if(typeof groups != 'undefined'){ %> <% groups.forEach(function(group) { %>
     <div class="list-item list-group-item list-group-item-action group" >
       <div style="display: flex; justify-content: center; align-items: center;">
           <i style="margin-right: 20px; display: none;" class="fa fa-times" aria-hidden="true"></i>
           <p><%=group.name%></p>
       </div>
-      <div style="display: flex;">
+      <div style="display: flex; align-items: center">
           <label class="switch">
-              <input name="enable" value="true" type="checkbox">
+              <input name="enable" value="true" type="checkbox" onchange="checkbox(this,'<%=group._id%>')" data-enabled="<%=group.enabled%>">
               <span></span>
           </label>
+          <button style="margin-left: 10px" class="btn btn-secondary" onclick="deletegroup('<%=JSON.stringify(group)%>')"><i class="fa fa-trash"
+            aria-hidden="true"></i></button>
       </div>
     </div>
     <% }); %> <% }  %>
-    <% if(typeof users != 'undefined'){ %> <% users.forEach(function(user) { %>
-    <div class="list-item list-group-item list-group-item-action user-item">
-      <div class="cropper">
-        <img src="<%= user.image %>" alt="">
-      </div>
-      <p><%= user.firstname %> <%= user.lastname %></p>
-      <button class="btn btn-danger" onclick="deleteform('<%= user %>')"><i class="fa fa-trash"
-          aria-hidden="true"></i></button>
-    </div>
-    <% }); %> <% } %>
   </div>
-  <hr>
-  <button class="btn btn-secondary" onclick="addGroup()"><i class="fa fa-graduation-cap" aria-hidden="true"></i>Add
-    Group</button>
-  <hr>
-  <button class="btn btn-success" onclick="saveUser()">Save</button>
 </div>
 
 <div class="qr justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw; padding: 30px;">

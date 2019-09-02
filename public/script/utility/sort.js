@@ -15,10 +15,10 @@ function sortableDisable(container) {
 function togglesort(button, container) {
     if (sort) {
         sortableDisable(container);
-        $(button).attr('class','btn btn-secondary');
+        $(button).attr('class','btn btn btn-outline-info');
     } else {
         sortableEnable(container);
-        $(button).attr('class','btn btn-success');
+        $(button).attr('class','btn btn-primary');
     }
     sort = !sort;
 }

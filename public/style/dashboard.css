@@ -82,6 +82,12 @@ body {
 #profile-bar >i{
     font-size: 5vh;
 }
+#profilepic{
+    object-fit: contain;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+}
 #profile-bar>div{
     height: 10vh;
     display: inline-flex;
@@ -240,7 +246,7 @@ footer p {
     color: red;
 }
 
-#logout-button:hover + i+ #profile-bar-text{
+#logout-button:hover + img+ #profile-bar-text{
     display: none;
 }
 

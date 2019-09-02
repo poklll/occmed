@@ -15,7 +15,9 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
 const moment = require('moment');
-
+const bodyparser = require('body-parser');
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 global.__basedir = __dirname;
 
 
@@ -31,7 +33,7 @@ app.set('views', path.join(__dirname, '/public/views/pages'));
 app.set('view engine', 'ejs');
 
 // Express body parser
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyparser.urlencoded({ extended: true }));
 
 // Express session
 app.use(
@@ -63,17 +65,25 @@ app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 app.use(file);
 app.use(page);
+app.use(user);
 app.use(register);
 app.use(login);
 app.use(form);
-app.use(user);
+
 
 
 
 var PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`sever is running on port ${PORT}`);
 });
-
+io.on('connection', function(socket) {
+  socket.on('addUser', function(user) {
+    socket.broadcast.emit('addUser',user);
+  });
+  socket.on('deleteUser',id=>{
+    socket.broadcast.emit('deleteUser',id);
+  });
+});
 
 process.on('uncaughtException', (e) => { console.log(e); });

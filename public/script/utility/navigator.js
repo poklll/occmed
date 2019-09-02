@@ -1,23 +1,20 @@
 function showlist() {
       $('.container').hide();
       $('.form-list').show();
-      $('.form-list').css('display', 'flex');
-      $('.form-list').css('justify-content', 'center');
-      $('.form-list').css('flex-direction', 'column');
-      $('.form-list').css('align-items', 'center');
       $('.form-list').toggleClass('slide-in-fwd-center');
 }
 
 function showeditor() {
       $('.qr').hide();
       $('.user').hide();
-      $('.container').show();
+      $('.container').css('display','flex');
 }
 
 function showuser() {
       $('.container').hide();
       $('.qr').hide();
       $('.user').css('display', 'flex');
+      $('#result-list').width($('#group-search').width());
 }
 
 function showqr(name) {
