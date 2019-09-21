@@ -6,6 +6,8 @@ const fileSchema = new mongoose.Schema({
   originalname: String,
   filetype: String,
   path: String,
+  image: String,
+  driveid: String,
   userid: String,
   date: {
       type: String,
