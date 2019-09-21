@@ -10,6 +10,15 @@ body {
     flex-direction: column;
 }
 
+body:-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+/* Optional: show position indicator in red */
+body:-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+
 label{
     margin-bottom: 0;
 }
@@ -53,6 +62,7 @@ option{
     padding: 5px;
     text-align: center;
 }
+
 .header{
     padding: 10px;
     background-color: dimgray;
@@ -198,8 +208,8 @@ input#component_name{
     padding-right: 25vw;
 }
 .form-list > .btn {
-    margin-left: 20vw;
-    width: 15vw;
+    margin-left: 35%;
+    width: 30%;
     font-size: 16px;
     color: whitesmoke;
     text-shadow: black;
@@ -248,6 +258,33 @@ input#component_name{
 .navbar {
     height: 80px;
 }
+.navbar-brand {
+    background-color: rgba(112, 128, 144, 0.493);
+    height: 100%;
+    display: flex;
+    padding: 10px;
+    width: 300px;
+    margin-left: -20px;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 0 50px 50px 0;
+  }
+  .slash{
+      height: 100%;
+      width: 2px;
+      background-color: rgb(151, 151, 151);
+  }
+  .navbar-brand > h1 {
+    color: white;
+    font-family: "Sarabun", sans-serif;
+  }
+  .navbar-brand > a {
+    color: white;
+    font-family: "Sarabun", sans-serif;
+  }
+  .navbar-brand >a> i:hover {
+    color: aquamarine;
+  }
 .nav-item {
    display: none;
    justify-content: center;
@@ -260,9 +297,9 @@ input#component_name{
 .nav-link{
     text-align: center;
 }
-.active{
-    background-color: gainsboro;
-}
+.active i {
+    color: #8ec5fc;
+  }
 /*flip*/
 
 .flip {
@@ -452,6 +489,40 @@ input#component_name{
     width: 30vw;
 }
 
+.ql-toolbar{
+    background-color: gainsboro;
+}
+.quill{
+    min-height: 100px;
+    max-height: 200px;
+    overflow: auto;
+    background-color: white;
+}
+.droparea{
+    margin: 30px;
+    height: 100px;
+    border: 2px dashed black;
+    border-radius: 20px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.droparea p{
+    position: absolute;
+    color: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.highlight {
+    background-color: #FFFFCC;
+}
+
+input[type=file]{
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
 @media only screen and (max-width: 800px) {
     #form_editor{
         width: 90vw;
@@ -459,6 +530,9 @@ input#component_name{
     .navbar {
         height: auto !important;
     }
+    .navbar-brand{
+        height: 50px;
+      }
     .flip{
         width: 100%;
     }

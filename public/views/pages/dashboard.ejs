@@ -1,51 +1,130 @@
-<% include ./partials/script %>
-<div id="notification-alert" class="notification <%=notification.type%> fade show">
-    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-    <div id="notification-alert-text"><%=notification.message%></div>
+<script>
+    const socket = io();
+ </script>
+ 
+ <nav class="navbar navbar-expand-lg navbar-light bg-light">
+   
+   <div class="navbar-brand">
+     <h1>OCCMED</h1>
+     <div class="slash"></div>
+     <h1>E-logbook</h1>
+   </div>
+ 
+   <button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+     <span class="navbar-toggler-icon"></span>
+   </button>
+ 
+   <div class="collapse  navbar-collapse" id="navbarSupportedContent">
+     <ul class="navbar-nav ml-auto">
+        <% if(user.position == 'Professor') {%>
+       <li class="nav-item slide-in-fwd-center active">
+         <div class="flip">
+           <div class="front">
+             <a class="nav-link" href="#"><i class="fa fa-tasks" aria-hidden="true"></i></a><span class="sr-only">(current)</span></a>
+           </div>
+           <div class="back">
+             <a href="#" onclick="showcontent()">
+               <p>คำร้องขอ</p>
+             </a>
+           </div>
+         </div>
+       </li>
+       <li class="nav-item slide-in-fwd-center">
+         <div class="flip">
+           <div class="front">
+             <a class="nav-link" href="#"><i class="fas fa-qrcode    "></i></a><span class="sr-only">(current)</span></a>
+           </div>
+           <div class="back">
+             <a href="#" onclick="showqr(`/add/?group=<%= typeof group != 'undefined' ? group._id : '' %>`)">
+               <p>QR code</p>
+             </a>
+           </div>
+         </div>
+       </li>
+       <li class="nav-item slide-in-fwd-center">
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fas fa-users    "></i></a><span class="sr-only">(current)</span></a>
+          </div>
+          <div class="back">
+            <a href="/group_editor">
+              <p>แก้ไขกลุ่ม</p>
+            </a>
+          </div>
+        </div>
+        </li>
+        <li class="nav-item slide-in-fwd-center">
+            <div class="flip">
+              <div class="front">
+                <a class="nav-link" href="#"><i class="fas fa-book-open    "></i></a><span class="sr-only">(current)</span></a>
+              </div>
+              <div class="back">
+                <a href="/form_editor">
+                  <p>แก้ไขแบบฟอร์ม</p>
+                </a>
+              </div>
+            </div>
+            </li>
+        <%}%>
+        <div class="profile">
+          <div class="profile-item">
+            <img src="<%=user.image%>" alt="">
+        </div>
+        <div class="profile-item">
+            <p class="name"><%=user.firstname%></p>
+            <p class="position"><%=user.position%></p>
+        </div>
+        <a href="/logout" class="profile-item signout">
+           <i class="fas fa-sign-out-alt" ></i>
+        </a>
+        </div>
+     </ul>
+   </div>
+ </nav>
+
+ <% include ./partials/messages %>
+ <div class="messages"></div>
+ <div id="search">
+      <input autocomplete="off" type="search"name="name" id="searchbar" class="form-control"  placeholder="ค้นหาผู้ใช้ หรือ กลุ่ม">
+ </div>
+ <div class="content">
+    <% if(user.position == 'Professor') {%>
+   <label for="request">คำร้องขอ</label>
+   <div name="request" class="request">
+      <% requests.forEach(function(request) { %>
+       <div class="request-item" data-id="<%=request.id%>">
+          <img alt="" class="user-pic" src="<%=request.img%>">
+          <div class="request-text"><%= request.text%></div>
+          <div class="check">
+            <i class="fa fa-check" aria-hidden="true"></i> 
+            <i class="fa fa-times" aria-hidden="true"></i>
+          </div>
+       </div>
+       <% }); %> <% } %>
 </div>
-<div class="topnavbar" id="top-nav">
-    <div id="profile-bar">
-        <div id="logout-button">
-            <p onclick="location.href ='/logout'">Logout</p>
-            <a href="/logout"><i class="fas fa-angle-left" style="font-size: 50px;"></i></a>
+   </div>
+   <% } else {%>
+    <label for="requirement">คำร้องขอ</label>
+    <div name="requirement" class="requirement">
+       <% requirements.forEach(function(requirement) { %>
+        <div class="request-item" data-id="<%=request.id%>">
+           <img alt="" class="user-pic" src="<%=request.img%>">
+           <div class="request-text"><%= request.text%></div>
+           <div class="check">
+             <i class="fa fa-check" aria-hidden="true"></i> 
+             <i class="fa fa-times" aria-hidden="true"></i>
+           </div>
         </div>
-        <img  id="profilepic"src="<%=profileimg%>" alt="">
-        <div id="profile-bar-text">
-            <p class="name"><%=name%></p>
-            <p class="position"><%=position%></p>
-        </div>
-    </div>
-    <div class="topnavitem" id="search-bar">
-        <div id="search-sign"><i class="fa fa-search" aria-hidden="true"></i></div>
-        <input id="search" type="text" class="form-control" aria-describedby="helpId" placeholder="Search"
-            oninput="wordsearch()">
-    </div>
-    <div id="navitem-group">
-        <div class="topnavitem">
-            <i class="fas fa-list-alt"></i>
-        </div>
-        <div class="topnavitem" id="notification-sign">
-            <i class="fa fa-bell" aria-hidden="true"></i>
-            <p class="number"><%=notification.unread%></p>
-        </div>
-    </div>
+        <% }); %> <% } %>
+   <% }%>
+<div class="element_container card" id="requestform">
 
 </div>
-<div class="notificationbar" id="notibar"></div>
+ </div>
 
-<div class="content" id="viewport">
-    <div class="topnavitem" id="search-bar-mobile">
-        <div id="search-sign"><i class="fa fa-search" aria-hidden="true"></i></div>
-        <input id="search-bar-mobile-input" type="text" class="form-control" aria-describedby="helpId"
-            onfocus="searcheffect('collapse')" onblur="searcheffect('visible')" placeholder="Search">
-    </div>
-    <div class="d-flex justify-content-center">
-        <% include ./partials/components/breadcrumb %>
-    </div>
-
-    <div class="item-container">
-        <% include ./partials/components/sections %>
-    </div>
-
-
-</div>
+  
+ 
+   <div class="qr justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw; padding: 30px;">
+     <img src="" alt="qr code" style="height: 400px; width: 400px; box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);">
+   </div>

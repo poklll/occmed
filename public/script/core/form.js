@@ -21,10 +21,8 @@ class Element {
       <button type="button" class="close" aria-label="Close" onclick="removeItem(this)"><span aria-hidden="true">&times;</span></button>
       <input type="text" id="component_name" class="form-control component_name" placeholder="Enter field name"></input>`);
         if (type == "Long text") {
-            element = `<textarea  name="" class="form-control textarea-autosize" rows="1"></textarea>`;
+            element = `<div class="quill"></div>`;
             $(element).appendTo(template);
-            addTabsupport();
-            autosize($('.textarea-autosize'));
         }
         else
             if (type == "Choices") {
@@ -104,10 +102,18 @@ class Element {
                             $(input).datepicker();
                             $(input).datepicker("option", "dateFormat", "dd/mm/yy");
                         }
-                        else {
-                            element = `<input type="${type}" name="" class="form-control"></input>`;
-                            var input = $(element).appendTo(template);
-                        }
+                        else
+                            if (type == "File") {
+                                var droparea = `<div class="droparea"></div>`;
+                                droparea = $(droparea).appendTo(template);
+                                var label = $('<p>Drop file(s) here</p>').appendTo(droparea);
+                                element = `<input type="${this.type}" name="${this.name}" class="form-control" multiple></input>`;
+                                var input = $(element).appendTo(droparea);
+                            }
+                            else {
+                                element = `<input type="${type}" name="" class="form-control"></input>`;
+                                var input = $(element).appendTo(template);
+                            }
         this.drafted = template;
         this.draftsetup();
         return template;
@@ -154,8 +160,8 @@ class Element {
             $(this.drafted).appendTo(target);
         }
         $(this.drafted).find("#component_name").focus();
-        addTabsupport();
-        autosize($('.textarea-autosize'));
+        var quill = $(this.drafted).find('.quill').get(0);
+        this.quill = this.quillsetup(quill);
     }
     draftsetup() {
         var el = this;
@@ -187,6 +193,7 @@ class Element {
                 unsave();
             }
         );
+
     }
     addChoice(choice) {
         var container = $(this.drafted).find(".choice_container");
@@ -238,6 +245,34 @@ class Element {
         var instructor = $(el).children('option:selected').val();
         alert(instructor);
     }
+
+    quillsetup(el) {
+        var toolbarOptions = [
+            ["bold", "italic", "underline", "strike"], // toggled buttons
+            [{ header: 1 }, { header: 2 }], // custom button values
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ script: "sub" }, { script: "super" }], // superscript/subscript
+            [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+            [{ direction: "rtl" }], // text direction
+
+            [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+            [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+            [{ align: [] }],
+
+            ["clean"] // remove formatting button
+        ];
+        var options = {
+            debug: "info",
+            modules: {
+                toolbar: toolbarOptions
+            },
+            placeholder: "Compose an epic...",
+            readOnly: false,
+            theme: "snow"
+        };
+        var editor = new Quill(el, options);
+        return editor;
+    }
     create() {
         let type = this.type;
         let element;
@@ -246,11 +281,8 @@ class Element {
         $(template).attr('data-name', this.name);
         $(template).attr('data-type', type);
         if (type == "Long text") {
-            element = `<textarea  name="${this.name}" class="form-control textarea-autosize" rows="1"></textarea>`;
+            element = `<div class="quill"></div>`;
             var textarea = $(element).appendTo(template);
-            addTabsupport();
-            autosize($('.textarea-autosize'));
-            $(textarea).val(this.value);
         }
         else
             if (type == "Choices") {
@@ -365,9 +397,19 @@ class Element {
                             else {
                                 var el = this;
                                 if (type == "File") {
+                                    var droparea = `<div class="droparea"></div>`;
+                                    droparea = $(droparea).appendTo(template);
+                                    var label = $('<p>Drop file(s) here</p>').appendTo(droparea);
                                     element = `<input type="${this.type}" name="${this.name}" class="form-control" multiple></input>`;
-                                    var input = $(element).appendTo(template);
-                                    var filename = $('<p></p>').appendTo(template);
+                                    var input = $(element).appendTo(droparea);
+                                    var previewGallery = new Gallery();
+                                    var preview = $('<div>Preview</div>').appendTo(template);
+                                    $(preview).hide();
+                                    $(previewGallery.element).appendTo(preview);
+                                    var gallery = new Gallery();
+                                    this.gallery = gallery;
+                                    $(gallery.element).appendTo(template);
+                                    gallery.hide();
                                     var progressbar = `<div class="progress">
                                     <div id="progressbar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
                                     </div>`;
@@ -395,12 +437,65 @@ class Element {
 
                                     }
                                     $(input).change(() => {
-                                        $(filename).html("");
+                                        $(label).html("");
+                                        previewGallery.empty();
+                                        $(preview).hide();
                                         var files = $(input).prop('files');
-                                        $.map(files, file => {
-                                            $(filename).html($(filename).html() + file.name + `<br>`);
-                                        });
+                                        if (files.length > 0) {
+                                            $(preview).show();
+                                            $.map(files, file => {
+                                                $(label).html($(label).html() + file.name + `<br>`);
+                                                if (file.type.includes("image")) {
+                                                    var reader = new FileReader();
+                                                    reader.onload = function () {
+                                                        var image = reader.result;
+                                                        previewGallery.add(image, file.name);
+                                                    }
+                                                    if (file) {
+                                                        reader.readAsDataURL(file);
+                                                    } else {
+                                                        alert("no file");
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            $(label).html('Drop file(s) here</p>');
+                                        }
                                     });
+
+                                    droparea = $(droparea).get(0);
+                                    ;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                                        droparea.addEventListener(eventName, preventDefaults, false)
+                                    })
+
+                                    function preventDefaults(e) {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                    }
+                                    ;['dragenter', 'dragover'].forEach(eventName => {
+                                        droparea.addEventListener(eventName, highlight, false)
+                                    })
+
+                                        ;['dragleave', 'drop'].forEach(eventName => {
+                                            droparea.addEventListener(eventName, unhighlight, false)
+                                        })
+
+                                    function highlight(e) {
+                                        droparea.classList.add('highlight')
+                                    }
+
+                                    function unhighlight(e) {
+                                        droparea.classList.remove('highlight')
+                                    }
+                                    droparea.addEventListener('drop', handleDrop, false)
+
+                                    function handleDrop(e) {
+                                        let dt = e.dataTransfer;
+                                        let files = dt.files;
+                                        $(input).prop('files', files).change();
+                                    }
+
 
                                 }
                                 else {
@@ -415,8 +510,10 @@ class Element {
 
     createTo(target) {
         var element = $(this.create()).appendTo(target);
-        addTabsupport();
-        autosize($('.textarea-autosize'));
+        if (this.type == "Long text") {
+            this.quill = this.quillsetup($(element).find('.quill').get(0));
+            this.quill.setContents(this.value.ops);
+        }
         return element;
     }
 
@@ -425,6 +522,7 @@ class Element {
 
 class Form {
     components = [];
+    elements = [];
     extensions = [];
     constructor(name) {
         this.name = name;
@@ -473,134 +571,143 @@ class Form {
         });
     }
     save(editor) {
-        this.components = [];
-        this.extensions = [];
+        var form = this;
+        form.components = [];
+        form.extensions = [];
         $(editor).children('.render_item').each((index, value) => {
             let name = $(value).attr("data-name");
             let type = $(value).attr("data-type");
             let tag;
             let choices = [];
-            if (type == "Long text") {
-                tag = 'textarea';
-            }
-            else if (type == "Choices") {
+            if (type == "Choices") {
                 tag = 'select';
             }
             else {
                 tag = 'input';
             }
             let val
-            if (type == "File") {
-                val = [];
-                $(value).find(".filelink").each((index, value) => {
-                    if ($(value).attr('href')) {
-                        val.push({ name: $(value).text(), path: $(value).attr('href') });
-                    }
-                });
-                var fileinput = $(value).find('input')[0];
-                var files = $(fileinput).prop("files");
-                if (files.length > 0) {
-                    var formData = new FormData();
-                    $.map(files, file => {
-                        formData.append('file', file);
+            if (type == "Long text") {
+                var quill = form.elements[index].quill;
+                val = quill.getContents();
+            }
+            else
+                if (type == "File") {
+                    val = [];
+                    $(value).find(".filelink").each((index, value) => {
+                        if ($(value).attr('href')) {
+                            val.push({ name: $(value).text(), path: $(value).attr('href') });
+                        }
                     });
-                    let xhr = new XMLHttpRequest();
-                    xhr.open("POST", "/upload");
-                    $(value).find('.progress').show();
-                    xhr.upload.onprogress = function (e) {
-                        var percentComplete = Math.ceil((e.loaded / e.total) * 100);
-                        $(value).find("#progressbar").css("width", percentComplete + "%");
-                        if (percentComplete == 100) {
-                            setTimeout(() => {
-                                $(value).find("#progressbar").css("width", "0%");
-                                $(value).find(".progress").hide();
-                            }, 500);
+                    var fileinput = $(value).find('input')[0];
+                    var files = $(fileinput).prop("files");
+                    if (files.length > 0) {
+                        var formData = new FormData();
+                        $.map(files, file => {
+                            formData.append('file', file);
+                        });
+                        let xhr = new XMLHttpRequest();
+                        xhr.open("POST", "/upload");
+                        $(value).find('.progress').show();
+                        xhr.upload.onprogress = function (e) {
+                            var percentComplete = Math.ceil((e.loaded / e.total) * 100);
+                            $(value).find("#progressbar").css("width", percentComplete + "%");
+                            if (percentComplete == 100) {
+                                setTimeout(() => {
+                                    $(value).find("#progressbar").css("width", "0%");
+                                    $(value).find(".progress").hide();
+                                }, 500);
+                            };
                         };
-                    };
-                    xhr.onload = async function () {
-                        var files = await JSON.parse(xhr.responseText).files;
-                        files.forEach(file => {
-                            val.push({ name: file.name, path: file.path });
-                            var div = $(`<div></div>`).appendTo(value);
-                            var item = $(`<a class="filelink" href="${file.path}">${file.name}</a>`).appendTo(div);
-                            $("<hr>").insertAfter(item);
-                            var del = `<button type="button" class="close" aria-label="Close">
+                        xhr.onload = async function () {
+                            var files = await JSON.parse(xhr.responseText).files;
+                            files.forEach(file => {
+                                val.push({ name: file.name, path: file.path, type: file.type });
+                                if (file.type.includes("image")) {
+                                    form.elements[index].gallery.show();
+                                    form.elements[index].gallery.add(file.path, file.name);
+                                }
+                                else {
+                                    var div = $(`<div></div>`).appendTo(value);
+                                    var item = $(`<a class="filelink" href="${file.path}">${file.name}</a>`).appendTo(div);
+                                    $("<hr>").insertAfter(item);
+                                    var del = `<button type="button" class="close" aria-label="Close">
                                 <span aria-hidden="true">&times;</span></button>`;
-                            del = $(del).insertAfter(item);
-                            $(del).click(() => {
-                                event.stopPropagation();
-                                var path = file.path;
-                                var xhr = new XMLHttpRequest();
-                                xhr.open("DELETE", path);
-                                xhr.onload = function () {
-                                    console.log(xhr.responseText);
-                                    $(del).parent().remove();
-                                };
-                                xhr.send();
+                                    del = $(del).insertAfter(item);
+                                    $(del).click(() => {
+                                        event.stopPropagation();
+                                        var path = file.path;
+                                        var xhr = new XMLHttpRequest();
+                                        xhr.open("DELETE", path);
+                                        xhr.onload = function () {
+                                            console.log(xhr.responseText);
+                                            $(del).parent().remove();
+                                        };
+                                        xhr.send();
+                                    });
+                                }
+                                $(fileinput).val('').change();
+
                             });
-                            $(fileinput).val('').trigger('change');
-
-                        });
+                        }
+                        xhr.send(formData);
                     }
-                    xhr.send(formData);
                 }
-            }
-            else if (type == "Images") {
-                val = [];
-                var files = [];
-                $(value).find('img').each((index, value) => {
+                else if (type == "Images") {
+                    val = [];
+                    var files = [];
+                    $(value).find('img').each((index, value) => {
 
-                    if ($(value).attr('data-name') != "undefined") {
-                        files.push({ name: $(value).attr('data-name'), path: $(value).attr('src'), img: value });
-                    }
-                    else {
-                        val.push($(value).attr('src'));
-                    }
+                        if ($(value).attr('data-name') != "undefined") {
+                            files.push({ name: $(value).attr('data-name'), path: $(value).attr('src'), img: value });
+                        }
+                        else {
+                            val.push($(value).attr('src'));
+                        }
 
-                });
-                var formData = new FormData();
-                if (files.length > 0) {
-                    $.map(files, file => {
-                        formData.append('file', dataURItoBlob(file.path), file.name);
                     });
-                    let xhr = new XMLHttpRequest();
-                    xhr.open("POST", "/upload", true);
-                    $(value).find('.progress').show();
-                    xhr.upload.onprogress = function (e) {
-                        var percentComplete = Math.ceil((e.loaded / e.total) * 100);
-                        $(value).find("#progressbar").css("width", percentComplete + "%");
-                        if (percentComplete == 100) {
-                            setTimeout(() => {
-                                $(value).find("#progressbar").css("width", "0%");
-                                $(value).find(".progress").hide();
-                            }, 500);
-                        };
-                    };
-                    xhr.onload = async function () {
-                        var imgpaths = await JSON.parse(xhr.responseText).files;
-                        imgpaths.forEach((img, index) => {
-                            val.push(img.path);
-                            $(files[index].img).attr('src', img.path);
-                            $(files[index].img).attr('data-name', "undefined");
-                            setTimeout(() => {
-                                $(files[index].img).css('opacity', '0.5');
-                            }, 200 * (index + 1));
-                            setTimeout(() => {
-                                $(files[index].img).css('opacity', '1');
-                            }, 300 * (index + 1));
+                    var formData = new FormData();
+                    if (files.length > 0) {
+                        $.map(files, file => {
+                            formData.append('file', dataURItoBlob(file.path), file.name);
                         });
+                        let xhr = new XMLHttpRequest();
+                        xhr.open("POST", "/upload", true);
+                        $(value).find('.progress').show();
+                        xhr.upload.onprogress = function (e) {
+                            var percentComplete = Math.ceil((e.loaded / e.total) * 100);
+                            $(value).find("#progressbar").css("width", percentComplete + "%");
+                            if (percentComplete == 100) {
+                                setTimeout(() => {
+                                    $(value).find("#progressbar").css("width", "0%");
+                                    $(value).find(".progress").hide();
+                                }, 500);
+                            };
+                        };
+                        xhr.onload = async function () {
+                            var imgpaths = await JSON.parse(xhr.responseText).files;
+                            imgpaths.forEach((img, index) => {
+                                val.push(img.path);
+                                $(files[index].img).attr('src', img.path);
+                                $(files[index].img).attr('data-name', "undefined");
+                                setTimeout(() => {
+                                    $(files[index].img).css('opacity', '0.5');
+                                }, 200 * (index + 1));
+                                setTimeout(() => {
+                                    $(files[index].img).css('opacity', '1');
+                                }, 300 * (index + 1));
+                            });
+                        }
+                        xhr.send(formData);
                     }
-                    xhr.send(formData);
-                }
 
-            }
-            else if (type == "Instructor") {
-                if ($(value).find('select').attr("data-value")) {
-                    val = JSON.parse($(value).find('select').attr("data-value"));
                 }
-            } else {
-                val = $(value).find(tag).val();
-            }
+                else if (type == "Instructor") {
+                    if ($(value).find('select').attr("data-value")) {
+                        val = JSON.parse($(value).find('select').attr("data-value"));
+                    }
+                } else {
+                    val = $(value).find(tag).val();
+                }
             $(value).find('option').each((index, value) => {
                 if (value) {
                     choices.push($(value).val());
@@ -609,10 +716,10 @@ class Form {
             this.components.push({ name: name, type: type, choices: choices, value: val });
         }
         );
-        $(editor).children('.extension').each(async(index,value)=>{
+        $(editor).children('.extension').each(async (index, value) => {
             var extension = new Form($(value).attr('data-name'));
             extension.save($(value).find('.element_container')[0]);
-            this.extensions.push({name: extension.name , components: extension.components});
+            this.extensions.push({ name: extension.name, components: extension.components });
         });
     }
     loadExtension(editor) {
@@ -628,18 +735,22 @@ class Form {
         this.loadEditor(container);
     }
     load(editor) {
+        var form = this;
         this.components.map(element => {
             var component = new Element(element.name, element.type, element.value);
             if (element.choices) {
                 component.choices = element.choices;
             }
             component.createTo(editor);
+            form.elements.push(component);
         });
-        this.extensions.map(extension => {
-            var ext = new Form(extension.name);
-            ext.components = extension.components;
-            ext.loadExtension(editor);
-        });
+        if (this.extensions) {
+            this.extensions.map(extension => {
+                var ext = new Form(extension.name);
+                ext.components = extension.components;
+                ext.loadExtension(editor);
+            });
+        }
     }
     loadEditor(editor) {
         this.components.map(element => {

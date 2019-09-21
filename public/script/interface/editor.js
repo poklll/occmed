@@ -123,7 +123,6 @@ function deleteform(name) {
     let xhr = new XMLHttpRequest();
     xhr.open("DELETE", "/form/" + name);
     xhr.onload = function () {
-        alert(`${name} has been deleted`);
         window.location.href = "/form_editor";
     }
     xhr.send();

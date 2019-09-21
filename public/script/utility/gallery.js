@@ -14,13 +14,22 @@ class Gallery {
     var cropper = document.createElement('div');
     $(cropper).addClass('cropper');
     cropper = $(cropper).appendTo(this.element);
-    var image = $(`<img class="img" data-name="${name}" src="${path}"></img>`).appendTo(cropper);
+    var image = $(`<img title="${name}" class="img" data-name="${name}" src="${path}"></img>`).appendTo(cropper);
     $(cropper).height($(cropper).width());
     var gal = this;
     $(image).click(() => {
       gal.menusetup(path,cropper);
     });
     return this.element;
+  }
+  show(){
+    $(this.element).show();
+  }
+  hide(){
+    $(this.element).hide();
+  }
+  empty(){
+    $(this.element).empty();
   }
   menusetup(path,cropper){
     var gal = this;

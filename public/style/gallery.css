@@ -4,6 +4,7 @@
    height: auto;
    max-height: 400px;
    overflow: auto;
+   margin: 10px;
    border-radius: 3px;
    display: flex;
    flex-wrap: wrap;

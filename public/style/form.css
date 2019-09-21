@@ -1,0 +1,189 @@
+
+
+label{
+    margin-bottom: 0;
+}
+p{
+    margin: 0;
+}
+
+h1 {
+    font-size: 25px;
+    color: whitesmoke;
+}
+
+label {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 20px;
+}
+
+
+input {
+    height: 10px;
+    font-size: 16px !important;
+}
+
+select{
+    width: 100%;
+    background-color: transparent;
+    text-align: center;
+}
+
+option{
+    font-size: 16px;
+    width: 100%;
+    height: 30px;
+    padding: 5px;
+    text-align: center;
+}
+.header{
+    padding: 10px;
+    background-color: dimgray;
+    text-align: center;
+    color:  white;
+}
+.container {
+    display: none;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-around;
+    margin: 0;
+    padding: 0;
+}
+
+
+.editor_item {
+    background-color: rgba(238, 235, 235, 0.973);
+    padding: 5px;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 2px !important;
+    border: 1px solid;
+}
+
+.render_item {
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    background-color: white !important;
+}
+
+.card {
+    box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);
+}
+
+
+
+.element_container > div >label.mb-1 {
+    width: 100%;
+    padding-left: 10px;
+    background-color: cornflowerblue;
+    color: whitesmoke;
+    border-radius: 5px;
+}
+.element_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+    width: 50%;
+    min-height: 100px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.extension{
+    background-color: white !important;
+    padding: 15px;
+    border-radius: 5px;
+    width: 100%;
+    text-align: left;
+    box-shadow: 3px 5px 10px -1px rgba(0, 0, 0, 0.44);
+}
+
+
+#add_button {
+    display: flex;
+    justify-content: space-around;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    border: 1px solid black;
+    color: white;
+    font-size: 20px;
+    padding: 15px;
+}
+
+#add_button>i {
+    display: none;
+}
+
+#add_button>#add_icon {
+    display: inline;
+}
+
+#add_button:hover {
+    border-radius: 20px;
+    width: 100%;
+    background: none;
+    background-color: whitesmoke;
+}
+
+#add_button:hover>h1 {
+    display: none;
+}
+
+#add_button:hover>i {
+    color: black;
+    display: inline;
+}
+
+#add_button:hover>#add_icon {
+    display: none;
+}
+
+#add_button:hover>i:hover {
+    color: gray;
+}
+
+
+.ql-toolbar{
+    background-color: gainsboro;
+}
+.quill{
+    min-height: 100px;
+    max-height: 200px;
+    overflow: auto;
+    background-color: white;
+}
+.droparea{
+    margin: 20px;
+    height: 100px;
+    border: 2px dashed black;
+    border-radius: 20px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.droparea p{
+    position: absolute;
+    color: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.highlight {
+    background-color: #FFFFCC;
+}
+
+input[type=file]{
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+@media only screen and (max-width: 800px) {
+   .element_container{
+       width: 100%;
+   }
+}

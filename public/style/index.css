@@ -8,6 +8,8 @@ body {
     align-items: center;
     padding: 0;
     overflow-x: hidden;
+    min-height: 100vh;
+    height: auto;
 }
 
 .row {
@@ -29,7 +31,7 @@ body {
     padding-top: 50px;
     color: white;
     text-shadow: black 1px 0 5px;
-    font-family: 'Kanit', sans-serif;
+    font-family: 'Sarabun', sans-serif !important;
 }
 
 .header img {
@@ -39,9 +41,13 @@ body {
 .header h1 {
    font-size: 40px;
    color: white;
+   font-family: 'Sarabun', sans-serif !important;
 }
 h2{
     color: white;
+}
+a{
+    color: cornflowerblue !important;
 }
 .login-portal {
     height: 260px;

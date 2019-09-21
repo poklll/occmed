@@ -3,6 +3,7 @@ const router = express.Router();
 const flash = require('connect-flash');
 const app = express();
 const Requirement = require('../models/requirement');
+const Form = require('../models/form');
 const requirementQuery = require('../query/requirement');
 const userQuery = require('../query/user');
 const groupQuery = require('../query/group');
@@ -22,7 +23,26 @@ router.get('/form_editor', async function (req, res) {
 
 }
 );
-
+router.get('/requirement/:id', async function (req, res) {
+  var requirement = await requirementQuery.id(req.params.id);
+  res.send(JSON.stringify(requirement));
+});
+router.get('/userform/:id', async function (req, res) {
+  var requirement = await requirementQuery.id(req.params.id);
+  res.send(JSON.stringify(requirement));
+});
+router.post('/userform/:id', upload.none(), async function (req, res) {
+  const [components, extensions,instructorid] = req.body;
+  var newForm = new Form({
+    components: components,
+    extension: extensions,
+    userid: req.user._id,
+    instructorid: instructorid
+  });
+  newForm.save()
+         .then(()=> res.send('done'))
+         .catch(err=> console.log(err));
+});
 router.get('/form/:id', async function (req, res) {
   try {
     var requirements = await requirementQuery.all();
@@ -88,7 +108,7 @@ router.post('/form/:id', upload.none(), async (req, res) => {
       }
       form.group[index].enabled = true;
       form.markModified('group');
-      form.save().then( ()=>{
+      form.save().then(() => {
         res.send(`${group.name} เปิดใช้งานแบบฟอร์ม ${form.name} แล้ว`);
       }
       );
@@ -110,10 +130,6 @@ router.post('/form/:id', upload.none(), async (req, res) => {
 });
 
 
-
-router.post('/form', async function (req, res) {
-
-});
 // Addcomponent
 router.post('/form_editor', async function (req, res) {
   try {

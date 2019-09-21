@@ -43,7 +43,7 @@ router.post('/upload', multer({ storage: fileStorage }).fields([{ name: 'file',m
         });
         newFile.save();
         console.log(`${file.filename} was uploaded`);
-        log.push({name:file.originalname,path:filepath,date:moment().format('lll')});
+        log.push({name:file.originalname,path:filepath,type:file.mimetype,date:moment().format('lll')});
     });
     res.send(JSON.stringify({files : log}));
 });

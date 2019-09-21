@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const formSchema = new mongoose.Schema({
  userid: String ,
- sectionname: String,
+ requiremntid: String,
  completed: Boolean,
  components: [],
- extension: [],
+ extensions: [],
  note: [String],
  comment: [String],
  instructorid: [String] ,

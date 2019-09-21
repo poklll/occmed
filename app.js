@@ -1,6 +1,8 @@
+global.__basedir = __dirname;
 const express = require('express');
 const app = express();
 const multer = require('multer');
+const drive = require('./public/script/config/drive');
 const path = require('path');
 const page = require('./public/script/router/pages');
 const form = require('./public/script/router/form');
@@ -18,7 +20,7 @@ const moment = require('moment');
 const bodyparser = require('body-parser');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-global.__basedir = __dirname;
+
 
 
 //mongoDB
@@ -26,6 +28,9 @@ mongoose.connect(DB, {useNewUrlParser: true})
 .then(() => console.log('Connected to MongoDB ...'))
 .catch(err => console.error('Could not connect to MongoDB:‌', err));
 
+//drive
+
+drive.rundrive();
 
 //EJS
 app.use(expressLayouts);
