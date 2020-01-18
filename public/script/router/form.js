@@ -10,6 +10,8 @@ const groupQuery = require('../query/group');
 const { ensureAuthenticated } = require('../config/auth');
 const multer = require('multer');
 const upload = multer();
+const drive = require('../config/drive');
+
 app.use(flash());
 
 router.get('/form_editor',ensureAuthenticated, async function (req, res) {
@@ -298,7 +300,8 @@ router.post('/form_editor', async function (req, res) {
           newSection
             .save()
             .then(section => {
-              res.redirect(`/form/${section._id}`)
+              drive.createFolder(section.name);
+              res.redirect(`/form/${section._id}`);
             })
             .catch(err => console.log(err));
         }

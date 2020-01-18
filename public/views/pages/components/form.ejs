@@ -22,7 +22,9 @@
   data-formid="<%=form._id%>"
   data-groupid="<%=form.groupid%>"
   data-userid="<%=form.userid%>"
+  data-user="<%=JSON.stringify(user)%>"
   data-form="<%=JSON.stringify(form)%>"
+  data-version="<%=form.versions.length%>"
   data-requirement="<%=JSON.stringify(requirement)%>"
 >
 <%if(user.position === "Professor"){%>

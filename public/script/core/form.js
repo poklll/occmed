@@ -102,10 +102,10 @@ class Element {
                             $(input).datepicker();
                             $(input).datepicker("option", "dateFormat", "dd/mm/yy");
                         }
-                            else {
-                                element = `<input type="${type}" name="" class="form-control"></input>`;
-                                var input = $(element).appendTo(template);
-                            }
+                        else {
+                            element = `<input type="${type}" name="" class="form-control"></input>`;
+                            var input = $(element).appendTo(template);
+                        }
         this.drafted = template;
         this.draftsetup();
         return template;
@@ -232,11 +232,11 @@ class Element {
         return input
     }
 
-    addComment(){
-         var comment = $(`<div class="comment"></div>`).appendTo(this.view);
-         var quill = $(`<div class="quill"></div>`).appendTo(comment);
-         var file = $(`<input type="file">`).appendTo(comment);
-         quill = this.quillsetup($(comment).find('.quill').get(0));
+    addComment() {
+        var comment = $(`<div class="comment"></div>`).appendTo(this.view);
+        var quill = $(`<div class="quill"></div>`).appendTo(comment);
+        var file = $(`<input type="file">`).appendTo(comment);
+        quill = this.quillsetup($(comment).find('.quill').get(0));
     }
     quillsetup(el) {
         var toolbarOptions = [
@@ -396,6 +396,7 @@ class Element {
                                     var input = $(element).appendTo(template);
                                     var previewGallery = new Gallery();
                                     var preview = $('<div>Preview</div>').appendTo(template);
+                                    var fileList = $('<div></div>').appendTo(preview);
                                     $(preview).hide();
                                     $(previewGallery.element).addClass('preview').appendTo(preview);
                                     var gallery = new Gallery();
@@ -437,23 +438,29 @@ class Element {
                                     }
                                     $(input).change(() => {
                                         previewGallery.empty();
+                                        $(fileList).empty();
                                         $(preview).hide();
                                         var files = $(input).prop('files');
-                                        $(preview).show();
-                                        $.map(files, file => {
-                                            if (file.type.includes("image")) {
-                                                var reader = new FileReader();
-                                                reader.onload = function () {
-                                                    var image = reader.result;
-                                                    previewGallery.add({ image: image, path: image, driveid: '', filename: file.name });
+                                        if (files.length > 0) {
+                                            $(preview).show();                                        
+                                            $.map(files, file => {
+                                                if (file.type.includes("image")) {
+                                                    var reader = new FileReader();
+                                                    reader.onload = function () {
+                                                        var image = reader.result;
+                                                        previewGallery.add({ image: image, path: image, driveid: '', filename: file.name });
+                                                    }
+                                                    if (file) {
+                                                        reader.readAsDataURL(file);
+                                                    } else {
+                                                        alert("no file");
+                                                    }
                                                 }
-                                                if (file) {
-                                                    reader.readAsDataURL(file);
-                                                } else {
-                                                    alert("no file");
+                                                else{
+                                                    $(fileList).append(`<li>${file.name}</li><br>`);
                                                 }
-                                            }
-                                        });
+                                            });
+                                        }
                                     });
                                 }
                                 else {
@@ -473,6 +480,156 @@ class Element {
         }
         this.view = element;
         return element;
+    }
+
+    async save() {
+        let thisElement = this;
+        let name = this.name;
+        let type = this.type;
+        let tag;
+        let choices = [];
+        let value = this.view;
+        if (type == "Choices") {
+            tag = 'select';
+        }
+        else {
+            tag = 'input';
+        }
+        let val
+        if (type == "Long text") {
+            var quill = this.quill;
+            val = quill.getContents();
+        }
+        else
+            if (type == "File") {
+                val = await new Promise(resolve => {
+                    var vals = [];
+                    var fileinput = $(value).find('input')[0];
+                    var files = $(fileinput).prop("files");
+                    if (files.length > 0) {
+                        var formData = new FormData();
+                        for (let index = 0; index < files.length; index++) {
+                            const file = files[index];
+                            var user = JSON.parse($('.Form').attr('data-user'));
+                            var time = moment().format("YYYYMMDD-HHmm");
+                            var version = parseInt($('.Form').attr('data-version'));
+                            var filename = `${user.firstname.substr(0, 4)}_${user.lastname.substr(0, 4)}_${time}_v${version + 1}_${index + 1}`;
+                            formData.append('file', file, filename);
+                        }
+                        let xhr = new XMLHttpRequest();
+                        xhr.open("POST", "/upload");
+                        $(value).find('.progress').show();
+                        xhr.upload.onprogress = function (e) {
+                            var percentComplete = Math.ceil((e.loaded / e.total) * 100);
+                            $(value).find("#progressbar").css("width", percentComplete + "%");
+                            if (percentComplete == 100) {
+                                setTimeout(() => {
+                                    $(value).find("#progressbar").css("width", "0%");
+                                    $(value).find(".progress").hide();
+                                }, 500);
+                            };
+                        };
+                        xhr.onload = async function () {
+                            var files = await JSON.parse(xhr.responseText);
+                            files.forEach(file => {
+                                vals.push(file);
+                                if (file.filetype.includes("image")) {
+                                    thisElement.gallery.show();
+                                    thisElement.gallery.add(file);
+                                }
+                                else {
+                                    var div = $(`<div></div>`).appendTo(value);
+                                    var item = $(`<a class="filelink" href="${file.path}">${file.filename}</a>`).appendTo(div);
+                                    $("<hr>").insertAfter(item);
+                                    var del = `<button type="button" class="close" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>`;
+                                    del = $(del).insertAfter(item);
+                                    $(del).click(() => {
+                                        event.stopPropagation();
+                                        var driveid = file.driveid;
+                                        var xhr = new XMLHttpRequest();
+                                        xhr.open("DELETE", `/file/${driveid}`);
+                                        xhr.onload = function () {
+                                            console.log(xhr.responseText);
+                                            $(del).parent().remove();
+                                        };
+                                        xhr.send();
+                                    });
+                                }
+                                $(fileinput).val('').change();
+                                resolve(vals);
+                            });
+
+                        }
+                        xhr.send(formData);
+                    } else {
+                        resolve(vals);
+                    }
+                })
+            }
+            else if (type == "Images") {
+                val = [];
+                var files = [];
+                $(value).find('img').each((index, value) => {
+
+                    if ($(value).attr('data-name') != "undefined") {
+                        files.push({ name: $(value).attr('data-name'), path: $(value).attr('src'), img: value });
+                    }
+                    else {
+                        val.push($(value).attr('src'));
+                    }
+
+                });
+                var formData = new FormData();
+                if (files.length > 0) {
+                    $.map(files, file => {
+                        formData.append('file', dataURItoBlob(file.path), file.name);
+                    });
+                    let xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/upload", true);
+                    $(value).find('.progress').show();
+                    xhr.upload.onprogress = function (e) {
+                        var percentComplete = Math.ceil((e.loaded / e.total) * 100);
+                        $(value).find("#progressbar").css("width", percentComplete + "%");
+                        if (percentComplete == 100) {
+                            setTimeout(() => {
+                                $(value).find("#progressbar").css("width", "0%");
+                                $(value).find(".progress").hide();
+                            }, 500);
+                        };
+                    };
+                    xhr.onload = async function () {
+                        var imgpaths = await JSON.parse(xhr.responseText).files;
+                        imgpaths.forEach((img, index) => {
+                            val.push(img.path);
+                            $(files[index].img).attr('src', img.path);
+                            $(files[index].img).attr('data-name', "undefined");
+                            setTimeout(() => {
+                                $(files[index].img).css('opacity', '0.5');
+                            }, 200 * (index + 1));
+                            setTimeout(() => {
+                                $(files[index].img).css('opacity', '1');
+                            }, 300 * (index + 1));
+                        });
+                    }
+                    xhr.send(formData);
+                }
+
+            }
+            else if (type == "Instructor") {
+                if ($(value).find('select').attr("data-value")) {
+                    val = JSON.parse($(value).find('select').attr("data-value"));
+                }
+            } else {
+                val = $(value).find(tag).val();
+            }
+        $(value).find('option').each((index, value) => {
+            if (value) {
+                choices.push($(value).val());
+            }
+        });
+        let component = { name: name, type: type, choices: choices, value: val };
+        return component;
     }
 }
 
@@ -533,157 +690,8 @@ class Form {
         var saveComponents = new Promise(async function (resolve) {
             var components = [];
             for (var [index, value] of $(editor).children('.render_item').toArray().entries()) {
-                let name = $(value).attr("data-name");
-                let type = $(value).attr("data-type");
-                let tag;
-                let choices = [];
-                if (type == "Choices") {
-                    tag = 'select';
-                }
-                else {
-                    tag = 'input';
-                }
-                let val
-                if (type == "Long text") {
-                    var quill = thisForm.elements[index].quill;
-                    val = quill.getContents();
-                }
-                else
-                    if (type == "File") {
-                        val = await new Promise(resolve => {
-                            var vals = []
-                            $(value).find(".filelink").each((index, value) => {
-                                if ($(value).data('file')) {
-                                    var file = JSON.parse(decodeURIComponent($(value).data('file')));
-                                    vals.push(file);
-                                }
-                            });
-                            $(form.elements[index].gallery.element).find('img').each((index, value) => {
-                                if ($(value).data('file')) {
-                                    var file = JSON.parse(decodeURIComponent($(value).data('file')));
-                                    vals.push(file);
-                                }
-                            });
-                            var fileinput = $(value).find('input')[0];
-                            var files = $(fileinput).prop("files");
-                            if (files.length > 0) {
-                                var formData = new FormData();
-                                $.map(files, file => {
-                                    formData.append('file', file);
-                                });
-                                let xhr = new XMLHttpRequest();
-                                xhr.open("POST", "/upload");
-                                $(value).find('.progress').show();
-                                xhr.upload.onprogress = function (e) {
-                                    var percentComplete = Math.ceil((e.loaded / e.total) * 100);
-                                    $(value).find("#progressbar").css("width", percentComplete + "%");
-                                    if (percentComplete == 100) {
-                                        setTimeout(() => {
-                                            $(value).find("#progressbar").css("width", "0%");
-                                            $(value).find(".progress").hide();
-                                        }, 500);
-                                    };
-                                };
-                                xhr.onload = async function () {
-                                    var files = await JSON.parse(xhr.responseText);
-                                    files.forEach(file => {
-                                        vals.push(file);
-                                        if (file.filetype.includes("image")) {
-                                            form.elements[index].gallery.show();
-                                            form.elements[index].gallery.add(file);
-                                        }
-                                        else {
-                                            var div = $(`<div></div>`).appendTo(value);
-                                            var item = $(`<a class="filelink" href="${file.path}">${file.filename}</a>`).appendTo(div);
-                                            $("<hr>").insertAfter(item);
-                                            var del = `<button type="button" class="close" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span></button>`;
-                                            del = $(del).insertAfter(item);
-                                            $(del).click(() => {
-                                                event.stopPropagation();
-                                                var driveid = file.driveid;
-                                                var xhr = new XMLHttpRequest();
-                                                xhr.open("DELETE", `/file/${driveid}`);
-                                                xhr.onload = function () {
-                                                    console.log(xhr.responseText);
-                                                    $(del).parent().remove();
-                                                };
-                                                xhr.send();
-                                            });
-                                        }
-                                        $(fileinput).val('').change();
-                                        resolve(vals);
-                                    });
-
-                                }
-                                xhr.send(formData);
-                            } else {
-                                resolve(vals);
-                            }
-                        })
-                    }
-                    else if (type == "Images") {
-                        val = [];
-                        var files = [];
-                        $(value).find('img').each((index, value) => {
-
-                            if ($(value).attr('data-name') != "undefined") {
-                                files.push({ name: $(value).attr('data-name'), path: $(value).attr('src'), img: value });
-                            }
-                            else {
-                                val.push($(value).attr('src'));
-                            }
-
-                        });
-                        var formData = new FormData();
-                        if (files.length > 0) {
-                            $.map(files, file => {
-                                formData.append('file', dataURItoBlob(file.path), file.name);
-                            });
-                            let xhr = new XMLHttpRequest();
-                            xhr.open("POST", "/upload", true);
-                            $(value).find('.progress').show();
-                            xhr.upload.onprogress = function (e) {
-                                var percentComplete = Math.ceil((e.loaded / e.total) * 100);
-                                $(value).find("#progressbar").css("width", percentComplete + "%");
-                                if (percentComplete == 100) {
-                                    setTimeout(() => {
-                                        $(value).find("#progressbar").css("width", "0%");
-                                        $(value).find(".progress").hide();
-                                    }, 500);
-                                };
-                            };
-                            xhr.onload = async function () {
-                                var imgpaths = await JSON.parse(xhr.responseText).files;
-                                imgpaths.forEach((img, index) => {
-                                    val.push(img.path);
-                                    $(files[index].img).attr('src', img.path);
-                                    $(files[index].img).attr('data-name', "undefined");
-                                    setTimeout(() => {
-                                        $(files[index].img).css('opacity', '0.5');
-                                    }, 200 * (index + 1));
-                                    setTimeout(() => {
-                                        $(files[index].img).css('opacity', '1');
-                                    }, 300 * (index + 1));
-                                });
-                            }
-                            xhr.send(formData);
-                        }
-
-                    }
-                    else if (type == "Instructor") {
-                        if ($(value).find('select').attr("data-value")) {
-                            val = JSON.parse($(value).find('select').attr("data-value"));
-                        }
-                    } else {
-                        val = $(value).find(tag).val();
-                    }
-                $(value).find('option').each((index, value) => {
-                    if (value) {
-                        choices.push($(value).val());
-                    }
-                });
-                components.push({ name: name, type: type, choices: choices, value: val });
+                let component = await thisForm.elements[index].save();
+                components.push(component);
             }
             resolve(components);
         });
@@ -772,9 +780,9 @@ class Form {
         for (let index = 0; index < this.elements.length; index++) {
             const element = this.elements[index];
             $(element.view).click(function () {
-                   if($(element.view).find('.comment').toArray().length == 0){
-                            element.addComment();
-                   }
+                if ($(element.view).find('.comment').toArray().length == 0) {
+                    element.addComment();
+                }
             });
         }
     }
@@ -800,4 +808,3 @@ function dataURItoBlob(dataURI) {
 
     return new Blob([ia], { type: mimeString });
 }
-

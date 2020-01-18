@@ -28,7 +28,15 @@ const del = (id) => {
     });  
 }
 
-
+const mkDir = (name) => {
+    return new Promise(resolve => {
+        fs.readFile(CREDENTIALS_PATH, async (err, content) => {
+            if (err) return console.log('Error loading client secret file:', err);
+            var id = await authorize(JSON.parse(content), createFolder, name);
+            resolve(id);
+        });
+    });  
+}
 
 function authorize(credentials, callback, file) {
     return new Promise(resolve => {
@@ -76,7 +84,7 @@ function uploadFile(auth, uploadedFile) {
         const filepath = __basedir + `/uploads/${filename}`;
         var fileMetadata = {
             'name': filename,
-            'parents': ["1toAFLcOml13h1pznkDlWwdQWvaykb6ay"],
+            'parents': ["1BE6w71IfjGGNl04Q1kRtb1EjoyrAT_jm"],
         };
         var media = {
             mimeType: mimetype,
@@ -91,6 +99,29 @@ function uploadFile(auth, uploadedFile) {
                 console.error(err);
             } else {
                 fs.unlinkSync(filepath);
+                shareFile(drive, file.data.id)
+                resolve(file.data.id);
+            }
+        });
+    });
+}
+
+
+function createFolder(auth, name) {
+    return new Promise(resolve => {
+        const drive = google.drive({ version: 'v3', auth });
+        var fileMetadata = {
+            'name': name,
+            'parents': ["1BE6w71IfjGGNl04Q1kRtb1EjoyrAT_jm"],
+            'mimeType': 'application/vnd.google-apps.folder'
+        };
+        drive.files.create({
+            resource: fileMetadata,
+            fields: 'id,webViewLink'
+        }, function (err, file) {
+            if (err) {
+                console.error(err);
+            } else {
                 shareFile(drive, file.data.id)
                 resolve(file.data.id);
             }
@@ -133,7 +164,10 @@ function deleteFile(auth, id) {
     });
 }
 
+
+
 module.exports = {
     push: push,
-    del: del
+    del: del,
+    createFolder: mkDir
 };
