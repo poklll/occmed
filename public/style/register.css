@@ -1,0 +1,19 @@
+#profileimg{
+    height: 200px;
+    width: 200px;
+    background: black;
+    object-fit: contain;
+}
+#profilepic-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.cropper{
+        position: relative;
+        overflow: hidden;
+        height: 200px;
+        width: 200px;
+        border-radius: 50%;
+}

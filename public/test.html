@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en-TH">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Occupational Medicine Khon Kaen University</title>
+    <link rel="shortcut icon" href="/asset/mdkkuicon.ico" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Kanit"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
+    <link rel="stylesheet" href="/public/style/animation.css" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+    <link rel="stylesheet" href="/public/style/gallery.css" />
+    <link rel="stylesheet" href="/public/style/test.css" />
+  </head>
+
+  <body>
+    <div id="form">
+      <button onclick="test()" class="btn btn-success">Test</button>
+      <button onclick="save()" class="btn btn-info">Save</button>
+      <button onclick="submit()" class="btn btn-primary">Submit</button>
+    </div>
+
+
+    <div title="เพิ่มช่องข้อมูล" class="d-flex justify-content-center">
+      <div id="add_button" class="btn btn-success">
+        <i id="add_icon" class="fa fa-plus" aria-hidden="true"></i>
+      </div>
+    </div>
+    <img id="testimg" src="" alt="" />
+  </body>
+  <script src="/public/script/utility/tabsupport.js"></script>
+  <script src="/public/script/utility/autosize.js"></script>
+  <script src="/public/script/core/form.js"></script>
+  <script src="/public/script/utility/gallery.js"></script>
+  <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+  <script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+  <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+  <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet" />
+  <script>
+    var components = [
+      { name: "First name", type: "text", value: "John" },
+      { name: "Last name", type: "text", value: "Wick" },
+      { name: "Age", type: "number", value: 34 },
+      { name: "Date of birth", type: "date", value: "08/05/2019" },
+      {
+        name: "Occupation",
+        type: "Choices",
+        value: "Killer",
+        choices: ["Killer", "Doctor", "Tinker"]
+      },
+      { name: "File", type: "File" },
+      { name: "Image", type: "Images" },
+      {name: "long",type: "Long text"},
+      { name: "Instructor", type: "Instructor" }
+    ];
+    var extension = [
+      {
+        name: "test1",
+        components: [
+          { name: "First name", type: "text", value: "John" },
+          { name: "Last name", type: "text", value: "Wick" },
+          { name: "Age", type: "number", value: 34 }
+        ]
+      }
+    ];
+    var extensiontemplate = [
+      {
+        name: "test1",
+        components: [
+          { name: "First name", type: "text", value: "John" },
+          { name: "Last name", type: "text", value: "Wick" },
+          { name: "Age", type: "number", value: 34 }
+        ]
+      },
+      {
+        name: "test2",
+        components: [{ name: "Age", type: "number", value: 34 }]
+      },
+      {
+        name: "test2",
+        components: [
+          { name: "First name", type: "text", value: "John" },
+          { name: "Age", type: "number", value: 34 }
+        ]
+      }
+    ];
+    var form = new Form("testform");
+    form.components = components;
+    form.extensions = extension;
+    function test() {
+      form.load("#form");
+      $(".cropper").height($(".cropper").width());
+    }
+    function save() {
+      form.save("#form");
+    }
+
+    $(() => {
+     
+      if (extensiontemplate.length > 0) {
+        extensiontemplate.forEach(extension => {
+          var el = $(`<i>${extension.name}</i>`).appendTo("#add_button");
+          $(el).click(() => {
+            var form = new Form(extension.name);
+            form.components = extension.components;
+            form.loadExtension("#form");
+          });
+        });
+        $("#add_button").show();
+      } else {
+        $("#add_button").hide();
+      }
+    });
+  </script>
+</html>

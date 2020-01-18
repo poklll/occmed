@@ -1,0 +1,206 @@
+<script>const socket = io();</script>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="navbar-brand">
+        <a href="/dashboard"><i class="fa fa-home" aria-hidden="true"></i></a>
+        <div class="slash"></div>
+        <a href="/form_editor">แก้ไขแบบฟอร์ม</a>
+    </div>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <% if(typeof sectionname != 'undefined'){ %>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item slide-in-fwd-center active">
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fas fa-edit    "></i></a><span class="sr-only">(current)</span></a>
+          </div>
+          <div class="back">
+            <a href="#" onclick="showeditor()">
+              <p>แก้ไขฟอร์ม</p>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item slide-in-fwd-center">
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fa fa-user" aria-hidden="true"></i></a><span
+              class="sr-only">(current)</span></a>
+          </div>
+          <div class="back">
+            <a href="#" onclick="showuser()">
+              <p>ผู้ใช้งาน</p>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item slide-in-fwd-center">
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fas fa-qrcode    "></i></a><span class="sr-only">(current)</span></a>
+          </div>
+          <div class="back">
+            <a href="#" onclick="showqr(`<%= typeof sectionname != 'undefined' ? sectionname : '' %>`)">
+              <p>QR code</p>
+            </a>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <% } %>
+</nav>
+
+
+
+
+<div class="header">
+  <h1><%= typeof sectionname != 'undefined' ? sectionname : '' %></h1>
+</div>
+<div class="messages"></div>
+
+<div class="container slide-in-fwd-center" style="height:auto; width: 100vw;">
+  <div class="row mt-5 mb-5">
+    <div class="col-md-10 col-sm-15">
+      <div class="card card-body" id="submit_form">
+        <h1 class="text-center mb-3">
+          <i class="fa fa-cog" aria-hidden="true"></i> Requirement Editor
+        </h1>
+        <% include ./partials/messages %>
+        <form action="/form_editor" method="POST">
+          <input id="_id" type="hidden" name="_id" value="<%= typeof _id != 'undefined' ? _id : ''  %>">
+          <div class="form-group">
+            <label for="sectionname">Name</label>
+            <input type="text" id="sectionname" name="sectionname" class="form-control" placeholder="Enter name"
+              value="<%= typeof sectionname != 'undefined' ? sectionname : '' %>" />
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" class="form-control" placeholder="Enter description"
+              value="<%= typeof description != 'undefined' ? description : '' %>" />
+          </div>
+          <div class="form-group">
+            <label for="total">Total requirement</label>
+            <input type="number" id="total" name="total" class="form-control"
+              value="<%= typeof total != 'undefined' ? total : 1 %>" />
+          </div>
+          <input id="form" type="hidden" name="form">
+          <button type="submit" class="btn btn-primary btn-block">
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="row mt-5 mb-5">
+      <div id="form_editor" class="col-md-12">
+        <div class="card card-body">
+          <h1 id="section_name" class="text-center mb-3">
+            <i class="fa fa-book" aria-hidden="true"></i> Form Editor
+          </h1>
+          <h3 class="ml-3"><span id="status" class="badge badge-waening">UNSAVED</span></h3>
+          <button title="จัดเรียง"class="btn btn-outline-info" onclick="togglesort(this,'#editor_container')"><i class="fa fa-sort" aria-hidden="true"></i></button>
+          <hr>
+          <div id="message_container"></div>
+          <div id="editor_container" class="element_container" onclick="selectEditor(this)">
+          </div>
+          <div id="render_container" class="element_container">
+          </div>
+          <div title="เพิ่มช่องข้อมูล" class="d-flex justify-content-center">
+            <div id="add_button" class="btn btn-success">
+              <i id="add_icon" class="fa fa-plus" aria-hidden="true"></i>
+              <i title="ตัวอักษร" class="fa fa-font" aria-hidden="true" onclick="addItem('Text')"></i>
+              <i title="บทความ" class="fas fa-align-justify" onclick="addItem('Long text')"></i>
+              <i title="ตัวเลข" class="fa fa-calculator" aria-hidden="true" onclick="addItem('Number')"></i>
+              <i title="ตัวเลือก" class="fa fa-list" aria-hidden="true" onclick="addItem('Choices')"></i>
+              <i title="วันที่" class="fas fa-calendar-alt" onclick="addItem('Date')"></i>
+              <i title="รูปภาพ" class="fas fa-image" onclick="addItem('Images')"></i>
+              <i title="ไฟล์" class="fa fa-file" aria-hidden="true" onclick="addItem('File')"></i>
+              <i title="อาจารย์" class="fas fa-chalkboard-teacher" onclick="addItem('Instructor')"></i>
+              <i title="ส่วนขยาย" class="fa fa-folder-plus" aria-hidden="true" onclick="addItem('Extension')"></i>
+            </div>
+          </div>
+          <hr>
+          <button id="save_button" class="btn btn-success btn-block" onclick="save()">Save</button>
+          <button id="preview_button" class="btn btn-outline-primary btn-block" onclick="preview(this)">Preview</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <span id="elements" data-elements="<%= typeof form != 'undefined' ? JSON.stringify(form) : '' %>" hidden></span>
+
+</div>
+
+
+<div class="form-list" style="height:auto; width: 100vw;">
+  <input autocomplete="off" type="search"name="name" id="form-search" class="form-control"  placeholder="ค้นหาแบบฟอร์ม">
+  <div class="list-group">
+    <% if(typeof requirements != 'undefined'){ %> <% requirements.forEach(function(requirement) { %>
+    <div class="list-item">
+      <a href="/form/<%= requirement._id %>" class="list-group-item list-group-item-action "><%= requirement.name %>
+        <button class="btn btn-secondary" onclick="deleteform('<%= requirement._id %>')"><i class="fa fa-trash"
+        aria-hidden="true"></i></button></a>
+    </div>
+    <% }); %> <% } %>
+  </div>
+  <hr>
+  <button class="btn btn-success" onclick="newForm()">New form</button>
+</div>
+
+<div class="user justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw;">
+  
+  <div id="users" class="list-group">
+      <input autocomplete="off" type="search"name="name" id="group-search" class="form-control"  placeholder="ค้นหากลุ่ม">
+      <div class="add-group">
+          <div id="result-list" class="scale-in-ver-top">
+              <table>
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">กลุ่มดังกล่าวไม่ได้ใช้แบบฟอร์มนี้ สามารถเพิ่มได้จากฐานข้อมูลด้านล่าง</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+              </table>
+              <table id="group-list"class="table table-hover table-light">
+                <thead class="thead-dark">
+                  <tr>
+                      <th scope="col"><i class="fa fa-graduation-cap" aria-hidden="true"></i> GROUP</th>
+                      <th scope="col"></th>
+                      <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+      </div>
+    <% if(typeof groups != 'undefined'){ %> <% groups.forEach(function(group) { %>
+    <div class="list-item list-group-item list-group-item-action group" >
+      <div style="display: flex; justify-content: center; align-items: center;">
+          <i style="margin-right: 20px; display: none;" class="fa fa-times" aria-hidden="true"></i>
+          <p><%=group.name%></p>
+      </div>
+      <div style="display: flex; align-items: center">
+          <label class="switch">
+              <input name="enable" value="true" type="checkbox" onchange="checkbox(this,'<%=group._id%>')" data-enabled="<%=group.enabled%>">
+              <span></span>
+          </label>
+          <button style="margin-left: 10px" class="btn btn-secondary" onclick="deletegroup('<%=JSON.stringify(group)%>')"><i class="fa fa-trash"
+            aria-hidden="true"></i></button>
+      </div>
+    </div>
+    <% }); %> <% }  %>
+  </div>
+</div>
+
+<div class="qr justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw; padding: 30px;">
+  <img src="" alt="qr code" style="height: 400px; width: 400px; box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);">
+</div>

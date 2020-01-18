@@ -1,0 +1,24 @@
+<% include ./partials/messages %>
+<div class="card card-body login-portal" id="login">
+  <h1 class="text-center text-capitalize">Login</h1>
+  <form action="/login" method="POST">
+
+    <div class="form-group">
+      <div class="formtab">
+        <i class="fas fa-user-circle"></i>
+        <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email" />
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="formtab">
+        <i class="fa fa-key" aria-hidden="true"></i>
+        <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password" />
+      </div>
+
+    </div>
+    <button type="submit" class="btn btn-info btn-block">Login</button>
+  </form>
+  <p class="lead">
+    No Account? <a href="/register">Register</a>
+  </p>
+</div>

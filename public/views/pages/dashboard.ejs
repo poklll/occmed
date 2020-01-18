@@ -1,0 +1,17 @@
+<script>
+    const socket = io();
+ </script>
+ <%- include('./components/dashboardNavbar',{user:user}); %>
+ <hr>
+ <% include ./partials/messages %>
+ <div class="messages"></div>
+ <div class="content">
+<% if(user.position == 'Professor') {%>   
+  <%- include('./components/request',{requests: requests}); %>
+<% } else { %> 
+<%- include('./components/groups',{groups: groups}); %>
+<% } %>
+</div>
+<div class="qr justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw; padding: 30px;">
+     <img src="" alt="qr code" style="height: 400px; width: 400px; box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);">
+</div>

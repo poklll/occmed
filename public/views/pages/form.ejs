@@ -1,0 +1,13 @@
+<script>
+        const socket = io();
+     </script>
+     <%- include('./components/dashboardNavbar',{user:user}); %>
+     <hr>
+     <% include ./partials/messages %>
+     <div class="messages"></div>
+     <div class="content">
+     <%- include('./components/form',{form: form,requirement: requirement,forms: forms,user: user}); %>
+     </div>
+<div class="qr justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw; padding: 30px;">
+<img src="" alt="qr code" style="height: 400px; width: 400px; box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);">
+</div>

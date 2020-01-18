@@ -1,0 +1,152 @@
+<a class="requirement" href="<%=(requirement.forms.length > 0)?`/user/form/${requirement.forms[requirement.forms.length-1]._id}`
+: `/newform/?group=${groupid}&requirement=${requirement.template._id}`%>">
+<div class="card-text"><%= requirement.template.name %></div>
+<div class="progress">
+<%
+   var progressBarClass = 'progress-bar progress-bar-striped progress-bar-animated';
+   var percent = (requirement.forms.length/requirement.template.total)*100;
+   if(percent < 50){
+        progressBarClass += " bg-secondary";  
+   }else 
+   if(percent <100){
+        progressBarClass += " bg-warning"; 
+   }else{
+        progressBarClass += " bg-success";
+   }
+%>
+<div id="progressbar" class="<%=progressBarClass%>" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" 
+<%=`style=width:${(requirement.forms.length/requirement.template.total)*100}%;`%>>
+</div>
+</div>
+<p><%=`${requirement.forms.length}/${requirement.template.total}`%></p>
+</a>
+<script>
+    var form;
+    function show(requirement,groupid,el){
+       $('.groups').hide(); 
+       requirement = JSON.parse(jsonEscape(requirement));
+       $('.Form').show();
+       if($( window ).width()>800){
+           $('.form-menu').css('display','grid');
+       }
+       changeForm(requirement,requirement.forms.length,groupid);
+    }
+    function changeForm(requirement,currentForm,groupid){
+      $('.Form>.card-body').empty();
+      $(".extension-container").empty(); 
+      form = new Form();
+       if(currentForm==0||currentForm>requirement.forms.length){
+          form.components = requirement.template.form;
+          form.extensions = requirement.template.extensions;
+          $('.Form').attr('data-formid',"");
+          if(currentForm==0){
+             currentForm = 1;
+          }
+       }
+       else{
+          form.components = requirement.forms[currentForm-1].components;
+          form.extensions = requirement.forms[currentForm-1].extensions;
+          $('.Form').attr('data-formid',requirement.forms[currentForm-1]._id);
+       }
+       if (requirement.template.extension.length > 0) {
+        requirement.template.extension.forEach(extension => {
+          var el = $(`<a href="#save">${extension.name}</a>`).appendTo(".extension-container");
+          $(el).click(() => {
+            var ext = new Form(extension.name);
+            ext.components = extension.components;
+            ext.loadExtension(".Form>.card-body");
+          });
+        });
+        $(".extension-container").show();
+      } else {
+        $("extension-container").hide();
+      }
+       $('.form-name').text(requirement.template.name+` #${currentForm}`);
+       form.load('.Form>.card-body');
+       $('.Form').attr('data-requirementid',requirement.template._id);
+       $('.Form').attr('data-groupid',groupid);
+       $('.form-menu').empty();
+       setUpFormMenu(requirement,currentForm,groupid);
+    }
+
+    function setUpFormMenu(requirement,currentForm,groupid){
+      var total = requirement.template.total;
+      var formNumber = requirement.forms.length;
+      for (let index = 1; index <= total; index++) {
+          let divClass;
+          if(index == formNumber+1){
+            divClass = 'btn-light';  
+          }
+         else{ 
+          if(requirement.forms.length == 0){
+            if(index == 1){
+                divClass = 'btn-light selected';
+            }
+            else{
+                divClass = 'disable';
+            }
+          }
+          else{
+              if(index > formNumber){
+                   divClass = 'disable';
+              }
+              else{
+                switch(requirement.forms[index-1].status){
+                  case 1: divClass = 'btn-warning';
+                  break;
+                  case 2: divClass = 'btn-success';
+                  break;
+              }   
+              } 
+          }
+        }
+        if(index == currentForm){
+           divClass += ' selected';
+        }
+        var btn = $(`<div class="${divClass}">${index}</div>`).appendTo('.form-menu');
+        $(btn).not('.disable').click(()=>{
+          if($( window ).width() < 800){
+              showFormMenu(); 
+          }
+              changeForm(requirement,index,groupid);
+        });
+      }
+      $('.form-menu').height((40*(total/3))+80);
+    }
+
+    function jsonEscape(str)  {
+        return str.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t");
+    }
+</script>
+
+<style>
+    .progress>p{
+        position: absolute; 
+        text-shadow: 1px 1px 10px black;
+    }
+    .requirement{
+       display: grid;
+       grid-template-columns: 2fr 1fr 1fr;
+       width: 100%;
+       height: 40px;
+       justify-items: center;
+       align-items: center;
+       border-bottom: 0.5px solid rgba(0, 0, 0, 0.288);
+       color: black;
+    }
+    .requirement:hover{
+        background-color: gainsboro;
+        cursor: pointer;
+        color:white;
+        text-decoration: none;
+        text-shadow: 2px 2px rgb(0, 0, 0);
+    }
+    @media only screen and (max-width: 800px) {
+      .requirement>.card-text{
+        font-size: 12px;
+    }
+    .requirement>p{
+      font-size: 12px;
+    }
+  }
+</style>

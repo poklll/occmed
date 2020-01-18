@@ -1,0 +1,131 @@
+<script>
+   const socket = io();
+</script>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="navbar-brand">
+    <a href="/dashboard"><i class="fa fa-home" aria-hidden="true"></i></a>
+    <div class="slash"></div>
+    <a href="/group_editor">แก้ไขกลุ่ม</a>
+  </div>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <% if(typeof users != 'undefined'){ %> 
+      <li class="nav-item slide-in-fwd-center active">
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fas fa-user-friends    "></i></a><span class="sr-only">(current)</span></a>
+          </div>
+          <div class="back">
+            <a href="#" onclick="showeditor()">
+              <p>แก้ไขกลุ่ม</p>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item slide-in-fwd-center">
+        <div class="flip">
+          <div class="front">
+            <a class="nav-link" href="#"><i class="fas fa-qrcode    "></i></a><span class="sr-only">(current)</span></a>
+          </div>
+          <div class="back">
+            <a href="#" onclick="showqr(`/add/?group=<%= typeof group != 'undefined' ? group._id : '' %>`)">
+              <p>QR code</p>
+            </a>
+          </div>
+        </div>
+      </li>
+      <% } %>
+    </ul>
+  </div>
+</nav>
+
+<div class="header">
+  <h1><%= typeof group != 'undefined' ? group.name : '' %></h1>
+</div>
+
+<% include ./partials/messages %>
+<div class="messages"></div>
+<% if(typeof groups != 'undefined'){ %> 
+<div class="list-group">
+    <input autocomplete="off" type="search"name="name" id="group-search" class="form-control" placeholder="ค้นหากลุ่ม">
+  <% groups.forEach(function(group) { %>
+    <div class="list-item">
+      <a href="/group/<%= group._id %>" class="list-group-item list-group-item-action "><%= group.name %> <button class="btn btn-secondary" onclick="deleteGroup('<%= group._id %>')"><i class="fa fa-trash"
+        aria-hidden="true"></i></button></a>
+    </div>
+    <% }); %> 
+    <form action="/group" method="POST" class="add-group">
+      <input type="text"name="name" class="form-control">
+      <button type="button" class="btn btn-info"><i class="fas fa-user-graduate"></i><p>create group</p></button>
+    </form>
+</div>
+<% } %>
+
+<% if(typeof users != 'undefined'){ %> 
+  <div id="users" data-id="<%=group._id%>" class="list-group slide-in-fwd-center">
+  <form action="/group/<%=group._id%>/?" method="POST" class="add-user">
+    <input autocomplete="off" type="search"name="name" id="user-search" class="form-control"  placeholder="ค้นหาผู้ใช้ หรือ กลุ่ม">
+    <input type="hidden" name="id">
+    <div id="result-list" class="scale-in-ver-top">
+      <table>
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ไม่พบผู้ใช้ในกลุ่มนี้ สามารถเพิ่มได้จากฐานข้อมูลด้านล่าง</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+      </table>
+      <table id="user-list"class="table table-hover table-light">
+        <thead class="thead-dark">
+          <tr>
+              <th scope="col"><i class="fa fa-user-circle" aria-hidden="true"></i> USER</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+          </tr>
+        </thead>
+        <thead class="thead-light">
+          <tr>
+              <th scope="col">First name</th>
+              <th scope="col">Last name</th>
+              <th scope="col">Position</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+      <table id="group-list"class="table table-hover table-light">
+        <thead class="thead-dark">
+          <tr>
+              <th scope="col"><i class="fa fa-graduation-cap" aria-hidden="true"></i> GROUP</th>
+              <th scope="col">(คัดลอกผู้ใช้งานจากกลุ่มอื่น)</th>
+              <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </form>
+  <% users.forEach(function(user) { %>
+    <div class="flip-in-hor-bottom list-item list-group-item list-group-item-action user-item" data-id="<%=user._id%>">
+      <div class="cropper">
+        <img src="<%= user.image %>" alt="">
+      </div>
+      <p><%= user.firstname %> <%= user.lastname %></p>
+      <button class="btn btn-danger" onclick="deleteuser('<%= user._id %>',false)"><i class="fa fa-trash"
+          aria-hidden="true"></i></button>
+    </div>
+    <% }); %> 
+</div>
+  <% } %>
+
+  <div class="qr justify-content-center slide-in-fwd-center" style="height:auto; width: 100vw; padding: 30px;">
+    <img src="" alt="qr code" style="height: 400px; width: 400px; box-shadow: 3px 5px 30px -1px rgba(0, 0, 0, 0.44);">
+  </div>

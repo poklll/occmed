@@ -1,0 +1,294 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+   
+        <a class="navbar-brand" href="/dashboard">
+          <h1>OCCMED</h1>
+          <div class="slash"></div>
+          <h1>E-logbook</h1>
+        </a>
+      
+        <button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse  navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+             <% if(user.position == 'Professor') {%>
+            <li class="nav-item slide-in-fwd-center active">
+              <div class="flip">
+                <div class="front">
+                  <a class="nav-link" href="#"><i class="fa fa-tasks" aria-hidden="true"></i></a><span class="sr-only">(current)</span></a>
+                </div>
+                <div class="back">
+                  <a href="#" onclick="showcontent()">
+                    <p>คำร้องขอ</p>
+                  </a>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item slide-in-fwd-center">
+              <div class="flip">
+                <div class="front">
+                  <a class="nav-link" href="#"><i class="fas fa-qrcode    "></i></a><span class="sr-only">(current)</span></a>
+                </div>
+                <div class="back">
+                  <a href="#" onclick="showqr(``)">
+                    <p>QR code</p>
+                  </a>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item slide-in-fwd-center">
+             <div class="flip">
+               <div class="front">
+                 <a class="nav-link" href="#"><i class="fas fa-users    "></i></a><span class="sr-only">(current)</span></a>
+               </div>
+               <div class="back">
+                 <a href="/group_editor">
+                   <p>แก้ไขกลุ่ม</p>
+                 </a>
+               </div>
+             </div>
+             </li>
+             <li class="nav-item slide-in-fwd-center">
+                 <div class="flip">
+                   <div class="front">
+                     <a class="nav-link" href="#"><i class="fas fa-book-open    "></i></a><span class="sr-only">(current)</span></a>
+                   </div>
+                   <div class="back">
+                     <a href="/form_editor">
+                       <p>แก้ไขแบบฟอร์ม</p>
+                     </a>
+                   </div>
+                 </div>
+                 </li>
+             <%}%>
+             <div class="profile">
+               <div class="profile-item">
+                 <img src="<%=user.image%>" alt="">
+             </div>
+             <div class="profile-item">
+                 <p class="name"><%=user.firstname%></p>
+                 <p class="position"><%=user.position%></p>
+             </div>
+             <a href="/logout" class="profile-item signout">
+                <i class="fas fa-sign-out-alt" ></i>
+             </a>
+             </div>
+          </ul>
+        </div>
+      </nav>
+
+
+      <style>
+        .navbar {
+  height: 80px;
+}
+.navbar-brand {
+  background-color: rgba(112, 128, 144, 0.493);
+  height: 100%;
+  display: flex;
+  padding: 10px;
+  width: 300px;
+  margin-left: -20px;
+  align-items: center;
+  justify-content: space-evenly;
+  border-radius: 0 50px 50px 0;
+}
+.slash{
+  height: 100%;
+  width: 2px;
+  background-color: rgb(151, 151, 151);
+}
+.navbar-brand > h1 {
+  color: whitesmoke;
+  font-size: 1.25rem;
+  font-family: 'Sarabun',sans-serif;
+  margin: 0;
+  text-align: center;
+}
+.navbar-brand > i {
+  color: white;
+  margin-right: 10px;
+}
+.profile {
+  width: 20vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.5fr;
+}
+.profile:hover>.signout{
+  display: flex;
+}
+.profile-item {
+  justify-self: center;
+  align-self: center;
+}
+.profile-item .name {
+  font-size: 20px;
+}
+.profile-item .position {
+  font-size: 16px;
+  color: cornflowerblue;
+  text-shadow: 1px black;
+}
+.profile-item > img {
+  width: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.signout{
+  display: none;
+  height: 80px;
+  width: 70%;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(253, 128, 106, 0.767);
+  justify-self: end;
+}
+.signout:hover{
+  text-decoration: none;
+  background-color: rgb(253, 128, 106);
+}
+.profile-item>i{
+  font-size: 20px;
+  color: rgb(207, 10, 10);
+}
+.nav-item {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.navbar{
+  padding-right: 0;
+}
+.nav-link {
+  text-align: center;
+}
+
+.active i {
+  color: #8ec5fc;
+}
+/*flip*/
+
+.flip {
+  position: relative;
+  display: inline-block;
+}
+
+.flip > .front,
+.flip > .back {
+  display: block;
+  transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition-duration: 0.5s;
+  transition-property: transform, opacity;
+}
+
+.flip > .front {
+  transform: rotateY(0deg);
+}
+
+.flip > .back {
+  position: absolute;
+  opacity: 0;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  transform: rotateY(-180deg);
+}
+
+.flip:hover > .front {
+  transform: rotateY(180deg);
+}
+
+.flip:hover > .back {
+  opacity: 1;
+  transform: rotateY(0deg);
+}
+
+.flip.flip-vertical > .back {
+  transform: rotateX(-180deg);
+}
+
+.flip.flip-vertical:hover > .front {
+  transform: rotateX(180deg);
+}
+
+.flip.flip-vertical:hover > .back {
+  transform: rotateX(0deg);
+}
+
+.flip {
+  position: relative;
+  display: inline-block;
+}
+
+.flip > .front {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  font-size: 30px;
+  background-size: cover !important;
+  background-position: center !important;
+  height: 80px;
+  padding: 1em 2em;
+}
+
+.flip > .back {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  background-size: cover !important;
+  background-position: center !important;
+  background-color: gainsboro;
+  height: 80px;
+  padding: 1em 2em;
+}
+
+.flip > .front p,
+.flip > .back p {
+  font-size: 0.9125rem;
+  line-height: 160%;
+  color: black;
+}
+
+@media only screen and (max-width: 800px) {
+  .navbar {
+    flex-direction: row !important;
+  }
+  .navbar-brand{
+    height: 50px;
+    width: 250px;
+  }
+  .profile {
+    margin-top: 10px;
+    width: 100%;
+    grid-template-columns: 1fr 1fr 2fr;
+  }
+  .signout{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    background-color: rgba(253, 128, 106, 0.767);
+    justify-self: end;
+  }
+  .signout>i{
+    color: rgb(207, 10, 10);
+  }
+  .navbar {
+    height: auto !important;
+  }
+  .flip {
+    width: 100%;
+  }
+}
+
+</style>

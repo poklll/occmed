@@ -1,0 +1,151 @@
+
+@media only screen and (min-width: 1100px) {
+    
+    #logout-button:hover > p{
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        display: inline;
+        font-size: 30px;
+        color: red;
+        cursor: pointer;
+        margin-right: 100px;
+    }
+}
+@media only screen and (max-width: 1100px) {
+    #profile-bar{
+        width: 40vw;
+    }
+    #profile-bar>div{
+        font-size: 3vw;
+    }
+    #profile-bar div>.position{
+        font-size: 2vw;
+    }
+    #search-bar{
+        width: 30vw;
+    }
+    #search-bar>.form-control{
+        width: 20vw;
+        font-family: Arial, 'FontAwesome';
+        font-size: 2vw;
+    }
+    .notification{
+        margin-top: 10vh;
+        margin-left: 50vw;
+        width: 50vw;
+    }
+
+    .section{
+        height: 300px;
+        width: 300px;
+    }
+    .breadcrumb {
+        position: relative;
+    }
+
+    #logout-button{
+        margin-right: 30px;
+    }
+  
+}
+
+@media only screen and (max-width: 800px) {
+    #profile-bar{
+        width: 40vw;
+    }
+    #profile-bar>div{
+        font-size: 3vw;
+    }
+    #profile-bar div>.position{
+        font-size: 2vw;
+    }
+    #search-bar{
+        width: 30vw;
+    }
+    #search-bar>.form-control{
+        width: 20vw;
+        font-family: Arial, 'FontAwesome';
+        font-size: 2vw;
+    }
+    .notification{
+        margin-top: 10vh;
+        margin-left: 50vw;
+        width: 50vw;
+    }
+    .section{
+        height: 200px;
+        margin-right: 1.5rem;
+    }
+    .breadcrumb {
+        position: relative;
+    }
+    #logout-button{
+        margin-right: 0px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #search-bar-mobile{
+        visibility: visible;
+    }
+    #search-bar{
+        visibility: collapse;
+    }
+    #profilepic{
+        object-fit: cover;
+        width: 300px;
+    }
+    #profile-bar{
+        width: 50vw;
+        padding-left: 10px;
+        margin-right: -25vw;
+    }
+    #profile-bar i{
+        font-size: 3vw;
+    }
+    #profile-bar>div{
+        width: 50vw;
+        font-size: 5vw;
+    }
+    #profile-bar div>.position{
+        font-size: 3vw;
+    }
+    #viewport {
+        padding-top: 11vh;
+    }
+    .notification{
+        margin-top: 10vh;
+        margin-left: 0;
+        width: 100vw;
+    }
+    .section{
+        height: 200px;
+        width: 350px;
+        margin-right: 1.5rem;
+    }
+    .breadcrumb {
+        position: relative;
+    }
+    #logout-button{
+        margin-right: 0px;
+    }
+}
+@media only screen and (max-height: 500px)
+{   #profile-bar{
+    width: 30vw;
+    }
+    #profile-bar>div{
+        width: 20vw;
+        font-size: 2vw;
+    }
+    .section{
+        height: 150px;
+        width: 350px;
+        margin-right: 1.5rem;
+    }
+    .breadcrumb {
+        position: relative;
+    }
+    #logout-button{
+        margin-right: 0px;
+    }
+}

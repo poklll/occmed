@@ -1,0 +1,355 @@
+
+
+<%- include('./menu',{requirement: requirement,form: form,forms: forms}); %>
+<%  var formNumber;
+    if(!form._id){
+        formNumber = forms.length+1;
+    }
+    else{
+      for (let index = 0; index < forms.length; index++) {
+         if(forms[index]._id.toString() == form._id.toString()){
+              formNumber = index+1;
+              break;
+         }
+      }
+    }
+%>
+
+
+<div
+  class="Form card"
+  data-requirementid="<%=form.requirementid%>"
+  data-formid="<%=form._id%>"
+  data-groupid="<%=form.groupid%>"
+  data-userid="<%=form.userid%>"
+  data-form="<%=JSON.stringify(form)%>"
+  data-requirement="<%=JSON.stringify(requirement)%>"
+>
+<%if(user.position === "Professor"){%>
+<div class="owner">
+  <img src="<%=form.userimage%>" alt="">
+  <h2 class="ownername"><%=form.username%></h2>
+</div>
+<%}%>
+  <div class="card-header">
+    <div class="form-selection">
+      <h1 class="form-name"><%=requirement.name%> #<%=formNumber%></h1>
+    </div>
+    <div class="form-option">
+      <button class="badge-pill badge-secondary btn-secondary comment-toggle">comment</button>
+      <%if(form.versions){%>
+      <div class="version dropdown">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Version <%=form.versions.length%></a>
+        <div class="dropdown-menu">
+          <%for(var index=0;index<form.versions.length;index++){%>
+              <div class="dropdown-item"  onclick="selectVersion(<%=index%>)">version <%=index+1%></div>
+          <%}%>
+        </div>
+      </div>
+      <%}%>
+    </div>
+  </div>
+  <div class="card-body fade-in"></div>
+  <div name="extension-panel" class="extension-panel bg-light">
+    <i class="fas fa-plus-circle"> ส่วนขยาย :</i>
+    <div class="extension-container"></div>
+  </div>
+  <div class="card-footer d-flex justify-content-between align-items-center">
+    <i onclick="window.location = '/dashboard'" class="back fa fa-arrow-circle-left" aria-hidden="true"></i>
+    <div>
+      <% if(user.position == 'Professor') {%>
+      <button class="btn btn-secondary" onclick="approve(0)">Reject</button>
+      <button class="btn btn-info" onclick="approve(2)">Approve</button>
+      <%} else{ %>
+      <button class="btn btn-success" id="save" onclick="save()">Save</button>
+      <% }%>
+    </div>
+  </div>
+</div>
+<script>
+  var form;
+  var data;
+  document.addEventListener("DOMContentLoaded", function() {
+    data = JSON.parse(jsonEscape($('.Form').attr('data-form')));
+    load(data); 
+     $('.nav-item').click(function(){
+         $(this).children().addClass('active');
+         $('.nav-item').not(this).children().removeClass('active');
+     });
+  });
+
+  function selectVersion(version){
+       var selectedVersion =  data.versions[version];
+       load(selectedVersion);
+       $('.version>.dropdown-toggle').text(`Version ${version+1}`);
+  }
+
+  function load(selectedVersion){
+    form = new Form();
+    form.components = selectedVersion.components;
+    form.extensions = selectedVersion.extensions;
+    $('.Form>.card-body').empty();
+    $('.extension-container').empty();
+    $('.Form').hide();
+    form.load('.Form>.card-body');
+    $('.Form').show();
+    var Extensions = JSON.parse(jsonEscape($('.Form').attr('data-requirement'))).extension;
+    if (Extensions.length > 0) {
+          Extensions.forEach(extension => {
+          var el = $(`<div class="btn btn-outline-dark">${extension.name}</div>`).appendTo(".extension-container");
+          $(el).click(() => {
+            var ext = new Form(extension.name);
+            ext.components = extension.components;
+            ext = ext.loadExtension(".Form>.card-body");                                   
+            extensions = form.extensionForm;
+            if(extensions.length > 0){
+                    ext.index = form.extensionForm[extensions.length-1].index+1;
+            }else{
+                    ext.index = 0;
+            }
+            form.extensionForm.push(ext);
+            $(ext.element).find('.close').click(()=>{
+            $(ext.element).remove();
+            var index = form.extensionForm.findIndex(x => x.index === ext.index);
+            form.extensionForm.splice(index,1);
+            });
+            window.scrollTo(0,document.body.scrollHeight);
+          });
+        });
+      }
+     <% if(user.position == 'Professor') {%> 
+          form.activateCommentingMode();
+     <%}%>
+  }
+
+  function save() {
+    form.save(".Form>.card-body").then(savedForm => {
+      postForm(savedForm);
+    });
+  }
+
+  function approve(status){
+    var xhr = new XMLHttpRequest();
+    var data = new FormData();
+    var instructorid;
+    if (form.components.find(x => x.type === "Instructor")) {
+      instructorid = form.components.find(x => x.type === "Instructor").value;
+    } else {
+      instructorid = [];
+    }
+    var formJSON = JSON.stringify({
+      components: form.components,
+      extensions: form.extensions,
+      instructorid: instructorid
+    });
+    data.append("form", formJSON);
+    data.append("groupid", $(".Form").attr("data-groupid"));
+    data.append("requirementid", $(".Form").attr("data-requirementid"));
+    data.append("status",status);
+    var formid = $(".Form").attr("data-formid");
+    var url = `/user/form/?id=${formid}`;
+    xhr.open("PUT", url);
+    xhr.onload = () => {
+      var response = JSON.parse(xhr.responseText);
+      var msg = new message(response.msg, "success");
+      msg.pushTo(".messages");
+      window.location = `/user/form/${response.id}`;
+    };
+    xhr.send(data);
+  }
+
+  function postForm(form) {
+    var xhr = new XMLHttpRequest();
+    var data = new FormData();
+    var instructorid;
+    if (form.components.find(x => x.type === "Instructor")) {
+      instructorid = form.components.find(x => x.type === "Instructor").value;
+    } else {
+      instructorid = [];
+    }
+    var formJSON = JSON.stringify({
+      components: form.components,
+      extensions: form.extensions,
+      instructorid: instructorid
+    });
+    data.append("form", formJSON);
+    data.append("name",$(".form-name").text());
+    data.append("groupid", $(".Form").attr("data-groupid"));
+    data.append("requirementid", $(".Form").attr("data-requirementid"));
+    var url;
+    var formid = $(".Form").attr("data-formid");
+    if (formid) {
+      url = `/user/form/?id=${formid}`;
+    } else {
+      url = "/user/form";
+    }
+    xhr.open("POST", url);
+    xhr.onload = () => {
+      var response = JSON.parse(xhr.responseText);
+      var msg = new message(response.msg, "success");
+      msg.pushTo(".messages");
+      window.location = `/user/form/${response.id}`;
+    };
+    xhr.send(data);
+  }
+  function jsonEscape(str) {
+    return str
+      .replace(/\n/g, "\\n")
+      .replace(/\r/g, "\\r")
+      .replace(/\t/g, "\\t");
+  }
+</script>
+
+<style>
+  .back {
+    font-size: 30px; 
+    margin: 0;
+  }
+  .back:hover {
+    color: rgb(172, 167, 167);
+  }
+  .owner{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 50px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px 5px 0px 0;
+    color: white;
+    background: rgb(145, 144, 144);
+  }
+  .owner>img{
+    object-fit: cover;
+    height: 40px;
+    width: 40px;
+    margin-right: 10px;
+    border:1px solid white;
+  }
+  .ownername{
+    font-size: 20px;
+    margin-bottom: 0;
+  }
+
+  .Form {
+    display: none;
+    height: auto;
+    width: 60vw;
+    margin-bottom: 20px;
+  }
+  .card-header {
+    display: grid;
+    align-items: center;
+    padding-bottom: 0;
+  }
+  .form-selection{
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    align-items: center;
+  }
+  .form-option{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  .comment-toggle{
+      border: 1px solid black;
+      color: black;
+      opacity: 0.8;
+      margin-bottom: 0.5rem;
+  }
+  
+  .comment {
+   width: 100%;
+   padding: 5px;
+   border: 1px solid black;
+   border-radius: 5px;
+   background-color: honeydew;
+ }
+  .comment>.quill{
+    margin-bottom: 5px;
+  }
+
+  .dropdown-item:hover{
+      cursor: pointer;
+  }
+  .nav-link{
+     color: rgb(173, 169, 169);
+  }
+  .nav-link.active{
+     color: black;
+  }
+  .form-option>.comment{
+    font-size: 20px;
+  }
+  input:disabled,select:disabled{
+     background-color: white !important;
+     border: 0;
+  }
+  <%if(user.position == "Professor"){ %>
+  .render_item:hover{
+    border: 1px solid plum;
+  }
+  <%}%>
+  .extension-panel {
+    width: 100%;
+    margin-bottom: 0px;
+    height: 80px;
+    padding-left: 10px;
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    align-items: center;
+    justify-items: center;
+    border-top: 0.5px solid black;
+  }
+  .extension-panel>i{
+    color: cadetblue;
+  }
+  .extension-container{
+     width: 100%;
+     display: flex;
+     align-items: center;
+  }
+  .extension-container>div:hover{
+     cursor: pointer;
+  }
+  .extension-container>div{
+     cursor: pointer;
+     color: black;
+     padding: 4px;
+     box-shadow: 2px 3px 5px black;
+     background-color: white;
+     border-radius: 10px;
+     margin-right: 10px;
+  }
+  @media only screen and (max-width: 800px) {
+    .Form {
+      width: 90vw;
+    }
+    .owner>img{
+      margin-right: 20px;
+    }
+    .form-menu-trigger {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      width: 40px;
+      border-radius: 20px;
+      background-color: gainsboro;
+    }
+    .extension-panel{
+      grid-template-columns: 2fr 3fr;
+      width: 100%;
+      height: 60px;
+      margin-left: 0;
+      margin-right: 0;
+      margin-bottom: 0px;
+      border-radius: 0;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+  }
+</style>

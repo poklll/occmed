@@ -1,0 +1,12 @@
+{
+    "files.problemExclude": {
+        "requirement.ejs": true,
+        "**/*.ejs": true,
+        "components": true
+    },
+    "files.exclude": {
+        "node_modules": true
+    },
+    "html.validate.scripts": false,
+    "html.validate.styles": false
+}

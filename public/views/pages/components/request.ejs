@@ -1,0 +1,105 @@
+<label for="request">คำร้องขอ</label>
+<div name="request" class="request">
+    <% requests.forEach(function(request) {%>
+    <a class="request-item" href="/user/form/<%=request.id%>">
+       <img alt="" class="user-pic" src="<%= request.userimage%>">
+       <div class="request-text"><%=`${request.username}`%> <%=`${request.name}`%>
+       
+       </div>
+       <div class="check">
+         <i class="fa fa-check" aria-hidden="true"></i> 
+         <i class="fa fa-times" aria-hidden="true"></i>
+       </div>
+    </a>
+    <% }); %>
+</div>
+
+
+<style>
+  label[for="request"] {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  color: black;
+  font-family: "Kanit", sans-serif;
+}
+.request {
+  width: 100%;
+  height: auto;
+  max-height: 60vh;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.request-item {
+  flex-shrink: 0;
+  width: 500px;
+  height: 100px;
+  background-image: linear-gradient(to top, #e6e9f0 0%, #eef1f5 100%);
+  box-shadow: 3px 5px 20px -1px rgba(0, 0, 0, 0.44);
+  border-radius: 20px;
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  transition: all 0.3s;
+}
+.request-item:hover{
+  text-decoration: none;
+}
+.request-item:hover {
+  background-image: linear-gradient(to bottom, #e6e9f0 0%, #d0dff3 100%);
+}
+
+.request-item > * {
+  align-self: center;
+  justify-self: center;
+}
+
+.request-item > img {
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.request-item > .request-text {
+  color: black;
+  font-size: 16px;
+  font-family: "Sarabun", sans-serif;
+}
+.request-item > .check {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-size: 30px;
+}
+.request-item > .check > i {
+  opacity: 0.5;
+}
+.request-item > .check > i:hover {
+  opacity: 1;
+}
+.request-item > .check > .fa-check {
+  color: greenyellow;
+  margin: 5px;
+}
+.request-item > .check > .fa-times {
+  color: tomato;
+  margin: 5px;
+}
+.request-item.selected {
+  width: 60vw;
+  height: 50px;
+  border-radius: 5px;
+  background-image: none;
+  background-color: rgb(49, 49, 49);
+  z-index: 3;
+}
+.request-item.selected > img {
+  border: 2px solid white;
+  height: 40px;
+  width: 40px;
+}
+.request-item.selected > .request-text {
+  color: white;
+}   
+</style>

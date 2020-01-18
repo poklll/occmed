@@ -1,0 +1,87 @@
+<div id="form-menu" class="form-menu" onscroll="menuScroll(this)">
+    <% var classEnum = {
+      0: 'btn btn-secondary',
+      1: 'btn btn-warning',
+      2: 'btn btn-success'
+    };
+    %>
+    <% for (let index = 1; index <= requirement.total; ++index) {
+      var divClass;
+      var location;
+      if(forms[index-1] != undefined){
+        divClass = classEnum[forms[index-1].status];
+        location = `/user/form/${forms[index-1]._id.toString()}`;
+        if(form._id){
+          if(forms[index-1]._id.toString() == form._id.toString()){
+          divClass += ' selected';
+          }      
+        }  
+      }
+        else {
+         if(index == forms.length+1 && user.position != "Professor"){
+          divClass = 'btn btn-light';
+          location = `/newForm/?group=${form.groupid}&requirement=${form.requirementid}`;  
+          if(forms.length == 0 || typeof form._id == 'undefined'){
+            divClass += ' selected';
+          }
+         }
+         else{
+           divClass = 'disable';
+           location = "";
+         } 
+        }%>
+          <div onclick="window.location = '<%=location%>'" class="<%=divClass%>"><%=index%></div>
+    <%}%>
+</div>
+
+<style>
+  .form-menu {
+    position: absolute;
+    left: 50px;
+    display: grid;
+    height: <%=((requirement.total*40/3)+80)+"px"%>;
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(auto-fit, 40px);
+    grid-gap: 3px;
+  }
+  .form-menu > div {
+    color: grey;
+    border-radius: 5px;
+    display: flex;
+    box-shadow: 0 0 5px black;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    justify-content: center;
+    align-items: center;
+    box-sizing: inherit;
+  }
+  .form-menu > .selected {
+    box-shadow: 0 0 5px black;
+    border: 3px solid black;
+    color: black;
+    font-weight: bold;
+  }
+  .form-menu > .disable {
+    background-color: gainsboro;
+  }
+
+  @media only screen and (max-width: 800px) {
+  .form-menu {
+    position: relative;
+    left: 0;
+    display: flex;
+    width: 90vw;
+    padding-left: 3px;
+    padding-top: 20px;
+    margin-bottom: 2vh;
+    flex-flow: wrap;  
+    height: 26vw;
+    overflow-x: auto;
+  }
+  .form-menu > div {
+      height: 10vw;
+      width: 10vw;
+      margin-right: 3px;
+      margin-bottom: 3px;
+    }
+  }
+</style>

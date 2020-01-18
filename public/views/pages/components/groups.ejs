@@ -1,0 +1,29 @@
+<label for="groups">Requirements</label>
+<hr>
+<div name="groups" class="groups">
+    <% groups.forEach(function(group) { %>
+    <div class="group card">
+       <div class="group-text card-header"><%= group.groupname %></div>
+    <% group.requirement.forEach(function(requirement) { %>
+    <%- include('./requirement',{requirement: requirement,groupid: group.groupid}); %>
+    <% }); %>
+    </div>
+    <% }); %>
+</div>
+
+<style>
+   .group{
+     width: 70vw;
+     height: auto;
+     min-height: 30vh;
+     margin-bottom: 20px;
+   }
+   .group-text{
+     font-size: 20px;
+   }
+   @media only screen and (max-width: 800px) {
+    .group{
+        width: 95vw;
+      }
+    }
+</style>
